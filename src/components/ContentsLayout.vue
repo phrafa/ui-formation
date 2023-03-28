@@ -6,7 +6,7 @@
     <TwoColumnLayout />  
   </div>
 </template>
-  
+
 <script>
 import FloatingActionButton from "@/components/Buttons/FloatingActionButton.vue";
 import TwoColumnLayout from "@/components/TwoColumnLayout.vue";
@@ -19,6 +19,7 @@ export default {
   data() {
     return {
       isTwoColumnLayout: true,
+
     };
   },
   methods: {

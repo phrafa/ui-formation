@@ -13,6 +13,7 @@
 
 import TopBar from './components/TopBar.vue'
 import ContentsLayout from '@/components/ContentsLayout.vue'
+// import FullScreen from '@/components/Modals/FullScreen.vue'
 
 export default {
   name: 'App',
@@ -20,19 +21,16 @@ export default {
   components: {
     TopBar,
     ContentsLayout,
-
+    // FullScreen
   },
 
-  data() {
+  data () {
     return {
-      isTwoColumnLayout: true,
-    };
-  },
-  methods: {
-    toggleLayout() {
-      console.log('efeefef')
-      this.isTwoColumnLayout = !this.isTwoColumnLayout;
-    },
+      dialog: false,
+      notifications: false,
+      sound: true,
+      widgets: false,
+    }
   },
 }
 </script>
@@ -49,7 +47,5 @@ export default {
   min-height: 100vh;
 }
 
-.topbar {
-  /* Estilize sua topbar aqui */
-}
+.topbar {}
 </style>

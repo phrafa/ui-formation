@@ -1,10 +1,9 @@
 import { createApp } from 'vue'
+import 'core-js/features/array/at';
+
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
-
-
-
 
 
 loadFonts()
