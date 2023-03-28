@@ -49,7 +49,7 @@ export default {
   align-items: center;
   background-color: #333;
   color: white;
-  height: 70px;
+  height: 57px;
   padding: 0 8px;
   -webkit-app-region: drag;
 }
