@@ -1,17 +1,18 @@
 <template>
   <div class="center-column">
-        <FullScreen />
-        
-      </div>
-
+    <div>
+      <div>content</div>
+      <PlanApply />
+    </div>
+  </div>
 </template>
   
 <script>
-import FullScreen from '@/components/Modals/FullScreen.vue'
+import PlanApply from '@/components/Modals/PlanApply.vue'
 
 export default {
   components: {
-    FullScreen
+    PlanApply
   },
   dialog: false,
   notifications: false,

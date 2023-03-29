@@ -1,4 +1,5 @@
 <template>
+    
     <v-row justify="center">
       <v-dialog
         v-model="dialog"
@@ -7,17 +8,22 @@
         transition="dialog-bottom-transition"
       >
         <template v-slot:activator="{ props }">
-          <v-btn
-            dark
+          <div class="div-finish">
+            <v-btn
             v-bind="props"
-          >
-            Open Dialog
-          </v-btn>
+              class="btn-finish"
+              color="#444"
+              
+              >
+              <v-icon  icon="mdi-cloud-upload"></v-icon> 
+              <span>Plan & Apply</span> 
+            </v-btn>
+          </div>
         </template>
         <v-card>
           <v-toolbar
             dark
-            color="primary"
+            color="#333"
           >
             <v-btn
               icon
@@ -26,7 +32,7 @@
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
-            <v-toolbar-title>Settings</v-toolbar-title>
+            <v-toolbar-title>Plan & Apply</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
               <v-btn
@@ -89,5 +95,28 @@ export default {
 .dialog-bottom-transition-enter-active,
 .dialog-bottom-transition-leave-active {
   transition: transform .2s ease-in-out;
+}
+
+.v-toolbar__content {
+  color: #FFF
+}
+
+.div-finish {
+  position: fixed;
+  bottom: 20px;
+  right: 10px;
+  min-width: 50px;
+  /* background-color: #FFF; */
+  
+}
+
+.btn-finish {
+  display: flex;
+  padding: 5px;
+}
+
+.btn-finish span {
+  display: flex;
+  padding: 5px;
 }
 </style>
