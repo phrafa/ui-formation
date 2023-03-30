@@ -3,18 +3,19 @@ const PermissionService = require("./permissionService");
 
 class OctokitService {
     fleetRepository = "fleet"
+    deployInfraRepository = "deploy-infra"
     sumupOwner = "sumup"
 
     constructor(gitHubToken) {
         this.octokit = new Octokit({ auth: `${gitHubToken}` });
     }
 
-    async getAutenticatedAvatar() {
+    async getAuthenticatedAvatar() {
         const data = await this.octokit.rest.users.getAuthenticated();
         return data['data']['avatar_url']
     }
 
-    async getAutenticatedEmailList() {
+    async getAuthenticatedEmailList() {
         const data = await this.octokit.request('GET /user/emails', {
             headers: {
               'X-GitHub-Api-Version': '2022-11-28'
@@ -24,7 +25,7 @@ class OctokitService {
     }
 
     async getSumupEmail() {
-        const emails = await this.getAutenticatedEmailList()
+        const emails = await this.getAuthenticatedEmailList()
         const sumupEmail = emails.filter((email)=>{
             if(!email['email'].includes("sumup.com")) {
                 return false;
@@ -37,7 +38,7 @@ class OctokitService {
         return null
     }
     
-    async getAutenticatedTribes() {
+    async getAuthenticatedTeams() {
         const authenticatedEmail = await this.getSumupEmail()
 
         const files = await this.octokit.rest.repos.getContent({
@@ -82,7 +83,19 @@ class OctokitService {
 
     }
 
+    async getProjectByteamNamespace(teamsNamespace) {
+        const files = await this.octokit.rest.repos.getContent({
+            owner: this.sumupOwner,
+            repo: this.deployInfraRepository,
+            path: "projects",
+        });
+
+        const fileNames = files['data'].map((file) => file.name)
+        const authenticatedProjectsName = fileNames.filter(fileName => teamsNamespace.includes(fileName))
+
+        console.log(authenticatedProjectsName)
+        
+    }
 }
 
 module.exports = OctokitService;
-

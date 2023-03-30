@@ -38,7 +38,7 @@ class Team {
     }
 
     getNamespaces() {
-        return this.namespaces
+        return this.namespaces[0]
     }
 
     getEnvironments() {
