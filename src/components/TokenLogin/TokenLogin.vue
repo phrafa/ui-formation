@@ -1,4 +1,7 @@
 <template>
+    <div>
+        <TopBar />
+    </div>
     <div class="test">
         <v-sheet id="test" class="pa-16" rounded>
             <v-card class="mx-auto px-6 py-8" max-width="344">
@@ -19,7 +22,13 @@
 
 <script>
 
+import TopBar from '../TopBar.vue'
+
+
 export default {
+    components: {
+        TopBar,
+    },
     data: () => ({
         form: false,
         password: null,
