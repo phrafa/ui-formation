@@ -1,12 +1,6 @@
 
 <template>
   <div id="app">
-  <!-- <div class="container">
-      <PrincipalLayout />
-                  </div> -->
-  <!-- <div class="container">
-      <TokenLogin />
-                  </div> -->
     <div class="container">
       <component v-bind:is="component" />
     </div>
@@ -17,6 +11,7 @@
 
 import TokenLogin from './components/TokenLogin/TokenLogin.vue'
 import PrincipalLayout from './components/PrincipalLayout/PrincipalLayout.vue'
+import LoadingScreen from './components/LoadingScreen/LoadingScreen'
 import { ref, onMounted } from 'vue'
 
 export default {
@@ -24,22 +19,28 @@ export default {
 
   components: {
     TokenLogin,
-    PrincipalLayout
+    PrincipalLayout,
+    LoadingScreen
   },
   setup() {
-    let isLogged = false //function
-    let layout = ref('TokenLogin')
-
-    if (isLogged)
-      layout = ref('PrincipalLayout')
+    let layout = ref('LoadingScreen')
 
     onMounted(() => {
+      setTimeout(() => {
+        window.electron.send("loginAuth", null);
+
+
+
+      }, 1000)
+
       window.electron.receive("loginAuth", (data) => {
         if (data.login) {
           layout.value = 'PrincipalLayout'
         } else {
-          console.log(data.message)
+          layout.value = 'TokenLogin'
         }
+
+
       })
     })
 

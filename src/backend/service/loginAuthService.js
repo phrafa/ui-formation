@@ -16,6 +16,9 @@ export class LoginAuthService {
     getLoginToken() {
         const tokenEncoded = this.store.get('gitHubToken');
 
+        if (!tokenEncoded)
+            return null
+
         return Buffer.from(tokenEncoded, 'base64').toString();
     }
 
