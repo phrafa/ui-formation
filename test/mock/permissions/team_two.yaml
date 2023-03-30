@@ -1,0 +1,12 @@
+- squad: Team Two
+  tribe: Payments
+  alertSlackChannel: "#team-two-alerts"
+  alertOpsgenieTeam: "Team Two"
+  namespaces:
+    - team-two
+  environments:
+    - dev
+    - stage
+    - live
+  members:
+    - team-two-dev@sumup.com
