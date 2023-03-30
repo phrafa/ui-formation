@@ -35,10 +35,10 @@ export default {
 
     onMounted(() => {
       window.electron.receive("loginAuth", (data) => {
-        if (data) {
-          console.log(`Received from auth login`)
+        if (data.login) {
           layout.value = 'PrincipalLayout'
-
+        } else {
+          console.log(data.message)
         }
       })
     })

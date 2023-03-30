@@ -1,5 +1,6 @@
 
 import Store from 'electron-store';
+import octoService from './octokitService'
 
 export class LoginAuthService {
     constructor(gitHubToken) {
@@ -15,7 +16,7 @@ export class LoginAuthService {
         this.store.get('gitHubToken');
     }
 
-    loggin () {
+    async loggin () {
         
         if (!this.token)
             this.token = this.getLoginToken()
@@ -23,7 +24,14 @@ export class LoginAuthService {
         if (!this.token)
             return false
 
-        //    
+        let octo = new octoService(this.token);   
+        
+        try {
+            if (!await octo.getAutenticatedAvatar())
+            return false
+        } catch {
+            return false
+        }
 
         this.setLoginToken(this.token)
         return true;
