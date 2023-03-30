@@ -30,19 +30,19 @@ class UserService {
 
     async loadProjects() {
 
-        if(this.teams.length == 0) {
+        if(this.teams.length === 0) {
             await this.loadTeams();
         }
         
         const teamsName = this.teams.map((team) => {
             return team.getNamespaces()
         })
-        
-        this.octokitService.getProjectByteamNamespace(teamsName)
+
+        return this.octokitService.getProjectsByTeamNamespace(teamsName)
         
     }
     
 }
 
-
+module.exports = UserService
 

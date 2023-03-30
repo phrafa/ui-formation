@@ -26,11 +26,8 @@ class OctokitService {
 
     async getSumupEmail() {
         const emails = await this.getAuthenticatedEmailList()
-        const sumupEmail = emails.filter((email)=>{
-            if(!email['email'].includes("sumup.com")) {
-                return false;
-            }
-            return true;
+        const sumupEmail = emails.filter((email) => {
+            return email['email'].includes("sumup.com");
         });
         if(sumupEmail.length > 0) {
             return sumupEmail[0]['email']
@@ -41,18 +38,7 @@ class OctokitService {
     async getAuthenticatedTeams() {
         const authenticatedEmail = await this.getSumupEmail()
 
-        const files = await this.octokit.rest.repos.getContent({
-            owner: this.sumupOwner,
-            repo: this.fleetRepository,
-            path: "permissions",
-        });
-
-        const yamlFiles = files['data'].filter((file) => {
-            if(!file.name.includes(".yaml")) {
-                return false
-            }
-            return true
-        })
+        const yamlFiles = await this.readDirContent(this.sumupOwner, this.fleetRepository, "permissions");
 
         const promises = await yamlFiles.map(async (file)=> {
             const content = await this.readFileContent(this.sumupOwner, this.fleetRepository, file.path)
@@ -64,8 +50,7 @@ class OctokitService {
         })
         
         // TODO: refactor promises function
-        const teams = (await Promise.all(promises)).filter((team)=> team != undefined)
-        return teams
+        return (await Promise.all(promises)).filter((team) => team !== undefined)
     }
 
     async readFileContent(owner, repository, path) {
@@ -78,23 +63,41 @@ class OctokitService {
             }
           })
 
-        const content = Buffer.from(contentData['data'].content, 'base64').toString();
-        return content
+        return Buffer.from(contentData['data'].content, 'base64').toString();
 
     }
 
-    async getProjectByteamNamespace(teamsNamespace) {
-        const files = await this.octokit.rest.repos.getContent({
+    async readFiles(owner, repository, path) {
+        return await this.octokit.rest.repos.getContent({
             owner: this.sumupOwner,
-            repo: this.deployInfraRepository,
-            path: "projects",
+            repo: repository,
+            path: path,
         });
+    }
 
-        const fileNames = files['data'].map((file) => file.name)
-        const authenticatedProjectsName = fileNames.filter(fileName => teamsNamespace.includes(fileName))
+    async readDirContent(owner, repository, path) {
+        const files = await this.readFiles(owner, repository, path);
 
-        console.log(authenticatedProjectsName)
-        
+        return files['data'].filter((file) => {
+            return file.name.includes(".yaml");
+        })
+    }
+
+    async readDirs(owner, repository, path) {
+        const files = await this.readFiles(owner, repository, path);
+
+        return files['data'].filter((file) => {
+            return file.type === "dir";
+        })
+    }
+
+    async getProjectsByTeamNamespace(teamsNamespace) {
+        const namespaces = await teamsNamespace.map(async (team) => {
+            const projects = await this.readDirs(this.sumupOwner, this.deployInfraRepository, `projects/${team}`)
+            return projects.map((file) => `${team}/${file.name}`)
+        })
+
+        return (await Promise.all(namespaces)).flat()
     }
 }
 
