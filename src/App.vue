@@ -17,8 +17,8 @@
 
 <script>
 
-// import TopBar from './components/TopBar.vue'
-// import ContentsLayout from '@/components/ContentsLayout.vue'
+import TopBar from './components/TopBar.vue'
+import ContentsLayout from '@/components/ContentsLayout.vue'
 import TokenLogin from './components/TokenLogin/TokenLogin.vue'
 
 export default {
@@ -26,8 +26,8 @@ export default {
 
   components: {
     TokenLogin,
-    // TopBar,
-    // ContentsLayout,
+    TopBar,
+    ContentsLayout,
     // FullScreen
   },
 

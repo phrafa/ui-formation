@@ -18,6 +18,7 @@
 </template>
 
 <script>
+
 export default {
     data: () => ({
         form: false,
@@ -28,17 +29,26 @@ export default {
     methods: {
         onSubmit() {
             if (!this.form) return
-
             this.loading = true
+            window.electron.send("loginAuth", "oi sp");
+            window.electron.receive("loginAuth", (data) => {
+                this.loading = false
+                if (data)
+                    console.log(`Received from auth login`);
+            });
+
+
+
 
             setTimeout(() => (this.loading = false), 2000)
         },
         required(v) {
-            return !!v || 'Field is required'
+            return !!v || 'Tolken is required'
         },
     },
 }
 </script>
+
 
 
 <style>
