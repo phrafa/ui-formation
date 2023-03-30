@@ -1,4 +1,5 @@
 const YamlService = require("./yamlService");
+const Team = require("./../entities/team");
 
 class PermissionService {
     async getTeam(fileContent) {
@@ -20,38 +21,5 @@ class PermissionService {
     }
 }
 
-class Team {
-    constructor(squad, tribe, namespaces, environments, members) {
-        this.squad = squad
-        this.tribe = tribe
-        this.namespaces = namespaces
-        this.environments = environments
-        this.members = members
-    }
-
-    getSquad() {
-        return this.squad
-    }
-
-    getTribe() {
-        return this.tribe
-    }
-
-    getNamespaces() {
-        return this.namespaces[0]
-    }
-
-    getEnvironments() {
-        return this.environments
-    }
-
-    getMembers() {
-        return this.members
-    }
-
-    isMember(email) {
-        return this.members.includes(email)
-    }
-}
 
 module.exports = PermissionService;

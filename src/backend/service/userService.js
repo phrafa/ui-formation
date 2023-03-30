@@ -14,7 +14,7 @@ class UserService {
     }
     
     loadSumupEmail() {
-        this.sumupEmail = this.octokitService.getSumupEmailI()
+        this.sumupEmail = this.octokitService.getSumupEmail()
     }
 
     loadAvatar() {
@@ -24,6 +24,7 @@ class UserService {
     loadToken() {
         this.token = ''
     }
+
     async loadTeams() {
         this.teams = await this.octokitService.getAuthenticatedTeams()
     }
@@ -33,7 +34,7 @@ class UserService {
         if(this.teams.length === 0) {
             await this.loadTeams();
         }
-        
+
         const teamsName = this.teams.map((team) => {
             return team.getNamespaces()
         })
