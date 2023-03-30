@@ -3,6 +3,9 @@
 import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+import * as controllers from "./backend/controllers";
+
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const path = require('path');
 
@@ -11,18 +14,21 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 async function createWindow() {
+  
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
     frame: false,
     webPreferences: {
-      nodeIntegration: true, // process.env.ELECTRON_NODE_INTEGRATION,
+      nodeIntegration: true,
       contextIsolation: true,
       preload: path.join(__dirname, '..', 'src', 'preload.js'),
-      enableRemoteModule: true,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+      enableRemoteModule: true
     }
   })
+
+  
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
@@ -32,30 +38,44 @@ async function createWindow() {
     win.loadURL('app://./index.html')
   }
 
-  win.webContents.on('did-finish-load', () => {
-    const {name, version } = requere('./package.json')
-    console.log(`${name} :: ${version}`)
-    win.setTitle(`${name} :: ${version}`)
-    
-  })
+  initializeIpcHandlers(win);
 
-  ipcMain.on('close-app', (event) => {
+  ipcMain.on("close-app", (event) => {
     win.close();
-    app.quit()
+    app.quit();
   });
-  
-  ipcMain.on('minimize-app', (event) => {
+
+  ipcMain.on("minimize-app", (event) => {
     win.minimize();
   });
-  
-  ipcMain.on('maximize-restore-app', (event) => {
-    if (win.isMaximized()) {
-      win.unmaximize();
-    } else {
-      win.maximize();
-    }
+
+  ipcMain.on("maximize-restore-app", (event) => {
+    const isFullScreen = win.isFullScreen();
+    win.setMenuBarVisibility(isFullScreen);
+    win.setAutoHideMenuBar(isFullScreen)
+    win.setFullScreen(!isFullScreen);
+
   });
+
 }
+
+const initializeIpcHandlers = (win) => {
+  const c = Object.keys(controllers)
+  for (let i in c) {
+    console.log(c[i])
+    if (c[i].slice(-4) === 'Once') {
+      console.log('once', c[i])
+      ipcMain.once(c[i], (event, args) => {
+        controllers[c[i]].execute(event, args)
+      });
+      continue;
+    } 
+    ipcMain.on(c[i], (event, args) => {
+        controllers[c[i]].execute(event, args)
+    });
+  }
+};
+
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -77,6 +97,7 @@ app.on('ready', async () => {
   }
   createWindow()
 })
+
 
 if (isDevelopment) {
   if (process.platform === 'win32') {

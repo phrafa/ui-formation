@@ -13,7 +13,6 @@
 
 import TopBar from './components/TopBar.vue'
 import ContentsLayout from '@/components/ContentsLayout.vue'
-// import FullScreen from '@/components/Modals/FullScreen.vue'
 
 export default {
   name: 'App',

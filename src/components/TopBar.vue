@@ -1,6 +1,6 @@
 <!-- TopBar.vue -->
 <template>
-  <div class="top-bar">
+  <div class="top-bar" v-if="smaillscreen">
     <div class="mac-controls" v-if="isMac">
       <div class="control-icon close" @click="close"></div>
       <div class="control-icon minimize" @click="minimize"></div>
@@ -15,10 +15,12 @@
 
 export default {
   data() {
+    
     return {
       isMac: true,
       isMaximized: false,
-    };
+      smaillscreen: true
+    }
   },
   methods: {
     close() {
@@ -29,7 +31,8 @@ export default {
     },
     minimize() {
       if (window.electron) {
-        window.electron.minimizeApp();
+         window.electron.minimizeApp();
+
       }
     },
     maximizeRestore() {

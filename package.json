@@ -1,5 +1,9 @@
 {
   "name": "ui-formation",
+  "author": {
+    "email": "sumup@sumup.com",
+    "name": "Paymentds BR"
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,10 +15,11 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
-  "main": "background.js",
   "dependencies": {
     "@mdi/font": "5.9.55",
     "core-js": "^3.29.1",
+    "electron-builder": "^2.1.1",
+    "fs-extra": "^11.1.1",
     "roboto-fontface": "*",
     "vue": "^3.2.13",
     "vue-fullpage-modal": "^0.5.3",
@@ -27,11 +32,11 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
-    "electron": "^13.0.0",
+    "electron": "^23.2.0",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "vue-cli-plugin-electron-builder": "~2.1.1",
+    "vue-cli-plugin-electron-builder": "~3.1.1",
     "vue-cli-plugin-vuetify": "~2.5.8",
     "webpack-plugin-vuetify": "^2.0.0-alpha.0"
   },

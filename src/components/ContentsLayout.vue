@@ -24,7 +24,12 @@ export default {
   },
   methods: {
     onButtonClick() {
-      console.log("Botão clicado");
+      window.electron.send("testeOnce", "oi sp");
+      window.electron.receive("testeOnce", (data) => {
+            console.log(`Received ${data} from main process`);
+      });
+      
+
     },
   },
 };
