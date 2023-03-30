@@ -22,7 +22,8 @@
 
 <script>
 
-import TopBar from '../TopBar.vue'
+import TopBar from './TopBar.vue'
+
 
 
 export default {
@@ -38,18 +39,7 @@ export default {
     methods: {
         onSubmit() {
             if (!this.form) return
-            this.loading = true
-            window.electron.send("loginAuth", "oi sp");
-            window.electron.receive("loginAuth", (data) => {
-                this.loading = false
-                if (data)
-                    console.log(`Received from auth login`);
-            });
-
-
-
-
-            setTimeout(() => (this.loading = false), 2000)
+            window.electron.send("loginAuth", true);
         },
         required(v) {
             return !!v || 'Tolken is required'

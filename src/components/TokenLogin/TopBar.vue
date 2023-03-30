@@ -15,7 +15,7 @@
 
 export default {
   data() {
-
+    
     return {
       isMac: true,
       isMaximized: false,
@@ -31,7 +31,7 @@ export default {
     },
     minimize() {
       if (window.electron) {
-        window.electron.minimizeApp();
+         window.electron.minimizeApp();
 
       }
     },
@@ -41,11 +41,11 @@ export default {
       }
     },
   },
-
+  
 };
 </script>
   
-<style scoped>
+  <style scoped>
 .top-bar {
   display: flex;
   justify-content: space-between;
