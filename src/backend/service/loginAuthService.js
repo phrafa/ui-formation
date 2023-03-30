@@ -19,7 +19,11 @@ export class LoginAuthService {
         if (!tokenEncoded)
             return null
 
-        return Buffer.from(tokenEncoded, 'base64').toString();
+        let token = Buffer.from(tokenEncoded, 'base64').toString();
+        this.token = token
+        
+        
+        return token
     }
 
     async loggin () {
@@ -33,9 +37,11 @@ export class LoginAuthService {
         let octo = new octoService(this.token);   
         
         try {
-            if (!await octo.getAutenticatedAvatar())
-            return false
-        } catch {
+            const response = await octo.getAuthenticatedAvatar()
+
+            if (!response)
+                return false
+        } catch(e) {
             return false
         }
 
