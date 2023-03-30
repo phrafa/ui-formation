@@ -22,7 +22,7 @@ class UserService {
     }
 
     loadToken() {
-        this.token = ''
+        this.token = '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'
     }
 
     async loadTeams() {
@@ -35,15 +35,15 @@ class UserService {
             await this.loadTeams();
         }
 
-        const teamsName = this.teams.map((team) => {
-            return team.getNamespaces()
-        })
-
-        return this.octokitService.getProjectsByTeamNamespace(teamsName)
+        return this.octokitService.getProjectsByTeamNamespace(this.teams)
         
     }
     
 }
 
-module.exports = UserService
+module.exports = UserService;
 
+(async() =>{
+    const us = new UserService()
+    console.log( await us.loadProjects())
+})()

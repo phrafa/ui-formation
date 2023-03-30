@@ -16,7 +16,7 @@ class Team {
         return this.tribe
     }
 
-    getNamespaces() {
+    getNamespace() {
         return this.namespaces[0]
     }
 

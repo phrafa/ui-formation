@@ -1,5 +1,6 @@
 const { Octokit } = require("octokit");
 const PermissionService = require("./permissionService");
+const Project = require("./../entities/project");
 
 class OctokitService {
     fleetRepository = "fleet"
@@ -91,10 +92,10 @@ class OctokitService {
         })
     }
 
-    async getProjectsByTeamNamespace(teamsNamespace) {
-        const namespaces = await teamsNamespace.map(async (team) => {
-            const projects = await this.readDirs(this.sumupOwner, this.deployInfraRepository, `projects/${team}`)
-            return projects.map((file) => `${team}/${file.name}`)
+    async getProjectsByTeamNamespace(teams) {
+        const namespaces = await teams.map(async (team) => {
+            const projects = await this.readDirs(this.sumupOwner, this.deployInfraRepository, `projects/${team.getNamespace()}`)
+            return projects.map((file) => new Project(file.name, team.getNamespace(), team.getSquad()))
         })
 
         return (await Promise.all(namespaces)).flat()
