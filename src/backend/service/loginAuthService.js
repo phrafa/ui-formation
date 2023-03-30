@@ -9,11 +9,14 @@ export class LoginAuthService {
     }
 
     setLoginToken() {
-        this.store.set('gitHubToken', this.token);
+        const base64 = Buffer.from(this.token).toString('base64');
+        this.store.set('gitHubToken', base64);
     }
 
     getLoginToken() {
-        this.store.get('gitHubToken');
+        const tokenEncoded = this.store.get('gitHubToken');
+
+        return Buffer.from(tokenEncoded, 'base64').toString();
     }
 
     async loggin () {
