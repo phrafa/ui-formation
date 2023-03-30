@@ -1,8 +1,14 @@
 <template>
   <div id="app">
-    <div class="container">
+    <!-- <div class="container">
       <div class="topbar">
         <TopBar />
+      </div>
+      <ContentsLayout />
+    </div> -->
+    <div class="container">
+      <div>
+        <TokenLogin />
       </div>
       <ContentsLayout />
     </div>
@@ -11,19 +17,21 @@
 
 <script>
 
-import TopBar from './components/TopBar.vue'
-import ContentsLayout from '@/components/ContentsLayout.vue'
+// import TopBar from './components/TopBar.vue'
+// import ContentsLayout from '@/components/ContentsLayout.vue'
+import TokenLogin from './components/TokenLogin/TokenLogin.vue'
 
 export default {
   name: 'App',
 
   components: {
-    TopBar,
-    ContentsLayout,
+    TokenLogin,
+    // TopBar,
+    // ContentsLayout,
     // FullScreen
   },
 
-  data () {
+  data() {
     return {
       dialog: false,
       notifications: false,
@@ -35,11 +43,11 @@ export default {
 </script>
 
 <style scoped>
-
 #app {
   background-color: #222;
   color: #FFF
 }
+
 .container {
   display: flex;
   flex-direction: column;
