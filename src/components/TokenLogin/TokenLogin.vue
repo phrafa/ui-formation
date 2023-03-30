@@ -41,10 +41,17 @@ export default {
             if (!this.form) return
 
             window.electron.send("loginAuth", this.password);
+            window.electron.receive("loginAuth", (data) => {
+                if (!data.login) {
+                    alert(data.message)
+                }
+
+            })
         },
         required(v) {
             return !!v || 'Tolken is required'
         },
+
     },
 }
 </script>
