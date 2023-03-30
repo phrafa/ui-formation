@@ -1,11 +1,10 @@
 const yaml = require("js-yaml");
-const fs = require("fs");
 
 class YamlService {
-    async getFileContents(filePath) {
+    async getFileContents(fileContent) {
         let data
         try {
-          data = yaml.load(fs.readFileSync(filePath, 'utf8'));
+          data = yaml.load(fileContent);
         } catch (e) {
           console.log(e);
         }

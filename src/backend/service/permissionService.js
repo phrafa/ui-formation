@@ -1,9 +1,9 @@
 const YamlService = require("./yamlService");
 
 class PermissionService {
-    async getTeam(filePath) {
+    async getTeam(fileContent) {
         const yamlService = new YamlService()
-        const fileContents = await yamlService.getFileContents(filePath)
+        const fileContents = await yamlService.getFileContents(fileContent)
 
         if (fileContents[0] !== undefined && fileContents[0].members !== undefined) {
             const team = fileContents[0]
