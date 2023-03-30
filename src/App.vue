@@ -1,34 +1,25 @@
 <template>
   <div id="app">
-    <!-- <div class="container">
-      <div class="topbar">
-        <TopBar />
-      </div>
-      <ContentsLayout />
-    </div> -->
     <div class="container">
-      <div>
-        <TokenLogin />
-      </div>
-      <ContentsLayout />
+      <PrincipalLayout />
     </div>
+    <!-- <div class="container">
+      <TokenLogin />
+    </div> -->
   </div>
 </template>
 
 <script>
 
-import TopBar from './components/TopBar.vue'
-import ContentsLayout from '@/components/ContentsLayout.vue'
-import TokenLogin from './components/TokenLogin/TokenLogin.vue'
+// import TokenLogin from './components/TokenLogin/TokenLogin.vue'
+import PrincipalLayout from './components/PrincipalLayout/PrincipalLayout.vue'
 
 export default {
   name: 'App',
 
   components: {
-    TokenLogin,
-    TopBar,
-    ContentsLayout,
-    // FullScreen
+    // TokenLogin,
+    PrincipalLayout
   },
 
   data() {
@@ -53,6 +44,4 @@ export default {
   flex-direction: column;
   min-height: 100vh;
 }
-
-.topbar {}
 </style>

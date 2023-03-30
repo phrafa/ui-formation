@@ -3,13 +3,13 @@
     <div class="left-column">
       <FloatingActionButton @click="onButtonClick" />
     </div>
-    <TwoColumnLayout />  
+    <TwoColumnLayout />
   </div>
 </template>
 
 <script>
-import FloatingActionButton from "@/components/Buttons/FloatingActionButton.vue";
-import TwoColumnLayout from "@/components/TwoColumnLayout.vue";
+import FloatingActionButton from "../Buttons/FloatingActionButton.vue";
+import TwoColumnLayout from "../TwoColumnLayout.vue";
 
 export default {
   components: {
@@ -26,9 +26,9 @@ export default {
     onButtonClick() {
       window.electron.send("testeOnce", "oi sp");
       window.electron.receive("testeOnce", (data) => {
-            console.log(`Received ${data} from main process`);
+        console.log(`Received ${data} from main process`);
       });
-      
+
 
     },
   },
@@ -46,5 +46,4 @@ export default {
   max-width: 25%;
   border: 1px solid #333;
 }
-
 </style>
