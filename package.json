@@ -17,6 +17,7 @@
     "@mdi/font": "5.9.55",
     "core-js": "^3.29.1",
     "electron-builder": "^2.1.1",
+    "electron-store": "^8.1.0",
     "fs-extra": "^11.1.1",
     "js-yaml": "^4.1.0",
     "octokit": "^2.0.14",

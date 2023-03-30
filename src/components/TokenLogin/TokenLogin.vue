@@ -39,7 +39,8 @@ export default {
     methods: {
         onSubmit() {
             if (!this.form) return
-            window.electron.send("loginAuth", true);
+
+            window.electron.send("loginAuth", this.password);
         },
         required(v) {
             return !!v || 'Tolken is required'
