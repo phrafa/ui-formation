@@ -67,6 +67,7 @@ class OctokitService {
 
             return Buffer.from(contentData.data.content, 'base64').toString();
         } catch (error) {
+            console.log(error)
             return null
         }
     }
@@ -127,18 +128,18 @@ class OctokitService {
     }
 
     async updateRepositoryWorkflow(project, repo) {
-        const content = await this.readFileContent(repo.owner.login, repo.name, `.github/workflows/ci-cd.yaml`)
+        return this.readFileContent(repo.owner.login, repo.name, `.github/workflows/ci-cd.yaml`)
+            .then(content => {
+                let config = (new YamlService()).getFileContents(content)
 
-        let config = (new YamlService()).getFileContents(content)
+                if (config !== null) {
+                    config.env.DEPLOY_INFRA_SERVICE_PATH = `${project.team.getNamespace()}/${project.name}/fleet`
+                    config.env.ECR_REPOSITORY = `${project.team.getNamespace()}/${project.name}`
+                }
 
-        if (config !== null) {
-            config.env.DEPLOY_INFRA_SERVICE_PATH = `${project.team.getNamespace()}/${project.name}/fleet`
-            config.env.ECR_REPOSITORY = `${project.team.getNamespace()}/${project.name}`
-        }
-
-        // TODO: commit file
-
-        return config
+                // TODO: commit file
+                return config
+            })
     }
 
     async getBranchSha(repository, branchName) {
