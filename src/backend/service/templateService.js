@@ -1,9 +1,9 @@
 class TemplateService {
     image = "861104244336.dkr.ecr.eu-west-1.amazonaws.com"
 
-    constructor(project) {
-        this.project = project
-        this.appname = project.name
+    constructor(app) {
+        this.app = app
+        this.appname = app.name
         this.chartTemplate = require("./../templates/chart.json");
         this.valuesTemplate = require("./../templates/values.json");
     }
@@ -20,14 +20,14 @@ class TemplateService {
         this.buildAwsResources()
 
         this.valuesTemplate['fleet-web-service'].appname = this.appname
-        this.valuesTemplate['fleet-web-service'].app.image = `${this.image}/${this.project.team.getSquad()}/${this.appname}:latest`
+        this.valuesTemplate['fleet-web-service'].app.image = `${this.image}/${this.app.squadName}/${this.appname}:latest`
 
         return this.valuesTemplate
     }
 
     buildGlobal() {
-        this.valuesTemplate.global.tribe = this.project.team.getTribe()
-        this.valuesTemplate.global.squad = this.project.team.getSquad()
+        this.valuesTemplate.global.tribe = this.app.tribeName
+        this.valuesTemplate.global.squad = this.app.squadName
     }
 
     buildIngress() {
