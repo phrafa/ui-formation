@@ -18,7 +18,7 @@ export async function execute(event, args) {
             namespaces[x].projects = projects.filter((item, index) => {
                return namespaces[x].namespace === item.team.getNamespace()
             }).map(item => {
-                return { name: item.name};
+                return { name: item.name, hash: `${namespaces[x].namespace}/${item.name}`};
             });
         }
 

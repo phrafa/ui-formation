@@ -1,20 +1,28 @@
 <template>
   <v-container>
-    <v-col v-for="item in items" :key="item.id">
-      <v-card style="background-color: #333; color: #fff">
-        <v-card-title style="font-size: 16px; font-weight: bold">
-          {{ item.teamName }}
-        </v-card-title>
+    <v-radio-group>
+        <v-col v-for="item in items" :key="item.id">
+           
+        <v-card style="background-color: #333; color: #fff">
+            <v-card-title style="font-size: 16px; font-weight: bold">
+                 {{ item.teamName }}
+            </v-card-title>
 
-        <v-card-text
-          v-for="project in item.projects"
-          :key="project.id"
-          style="font-style: italic"
-        >
-          {{ project.name }}
-        </v-card-text>
-      </v-card>
-    </v-col>
+            <v-card-text
+            v-for="project in item.projects"
+            :key="project.id"
+            style="font-style: italic"
+            >
+           
+                <v-radio :label=project.name :value=project.hash></v-radio> 
+            
+           
+            </v-card-text>
+        </v-card>
+    
+        </v-col>
+    </v-radio-group>
+
   </v-container>
 </template>
   
