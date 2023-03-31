@@ -4,27 +4,34 @@ class TemplateService {
     constructor(project) {
         this.project = project
         this.appname = project.name
-        this.template = require("./../templates/values.json");
+        this.chartTemplate = require("./../templates/chart.json");
+        this.valuesTemplate = require("./../templates/values.json");
     }
 
-    buildContent() {
+    buildChartContent() {
+        this.chartTemplate.name = this.appname
+        return this.chartTemplate
+    }
+
+    buildValuesContent() {
         this.buildGlobal()
         this.buildIngress()
+        this.buildDBSecrets()
         this.buildAwsResources()
 
-        this.template['fleet-web-service'].appname = this.appname
-        this.template['fleet-web-service'].app.image = `${this.image}/${this.project.team.getSquad()}/${this.appname}:latest`
+        this.valuesTemplate['fleet-web-service'].appname = this.appname
+        this.valuesTemplate['fleet-web-service'].app.image = `${this.image}/${this.project.team.getSquad()}/${this.appname}:latest`
 
-        return this.template
+        return this.valuesTemplate
     }
 
     buildGlobal() {
-        this.template.global.tribe = this.project.team.getTribe()
-        this.template.global.squad = this.project.team.getSquad()
+        this.valuesTemplate.global.tribe = this.project.team.getTribe()
+        this.valuesTemplate.global.squad = this.project.team.getSquad()
     }
 
     buildIngress() {
-        this.template['fleet-web-service'].ingress = [
+        this.valuesTemplate['fleet-web-service'].ingress = [
             {
                 accessType: "private-svc-only",
                 hosts: [
@@ -35,8 +42,44 @@ class TemplateService {
         ]
     }
 
+    buildDBSecrets() {
+        const dbSecrets = [
+            {
+                "name": "DATABASE_HOST",
+                "valueFrom": {
+                    "secretKeyRef": {
+                        "name": `${this.appname}-aurorapsqlcluster`,
+                        "key": "endpoint"
+                    }
+                }
+            },
+            {
+                "name": "DATABASE_USER",
+                "valueFrom": {
+                    "secretKeyRef": {
+                        "name": `${this.appname}-aurorapsqlcluster`,
+                        "key": "username"
+                    }
+                }
+            },
+            {
+                "name": "DATABASE_PASSWORD",
+                "valueFrom": {
+                    "secretKeyRef": {
+                        "name": `${this.appname}-aurorapsqlcluster`,
+                        "key": "password"
+                    }
+                }
+            }
+        ]
+
+        dbSecrets.map(secret => {
+            this.valuesTemplate['fleet-web-service'].app.env.push(secret)
+        })
+    }
+
     buildAwsResources() {
-        this.template['fleet-aws-resources'] =
+        this.valuesTemplate['fleet-aws-resources'] =
         {
             s3Bucket: {
                 enabled: false

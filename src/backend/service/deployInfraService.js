@@ -10,7 +10,13 @@ class DeployInfraService {
     }
 
     createProjectContent(project) {
-        const template = (new TemplateService(project)).buildContent()
+        const template = (new TemplateService(project)).buildValuesContent()
+
+        return (new YamlService()).createFileContents(template)
+    }
+
+    createChartContent(project) {
+        const template = (new TemplateService(project)).buildChartContent()
 
         return (new YamlService()).createFileContents(template)
     }
