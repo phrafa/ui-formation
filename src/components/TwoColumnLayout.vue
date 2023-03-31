@@ -19,7 +19,7 @@ export default {
 
     onMounted(() => {
       setTimeout(() => {
-        console.log('aguarde...')
+        // console.log('aguarde...')
       }, 1000)
 
       window.electron.receive("createNewApp", (data) => {
@@ -46,7 +46,7 @@ export default {
   notifications: false,
   sound: true,
   widgets: false,
-  
+
 };
 </script>
   

@@ -7,18 +7,20 @@ export async function execute(event, args) {
         const user = new UserService();
 
         const projects = await user.loadProjects()
-        
+
+        // console.log(JSON.stringify(projects))
+
         const namespaces = projects.filter((item, index) => {
             return projects.findIndex(obj => obj.team.getNamespace() === item.team.getNamespace()) === index;
         }).map(item => {
             return { namespace: item.team.getNamespace(), teamName: item.team.getSquad(), projects: {} };
-          });
+        });
 
         for (let x in namespaces) {
             namespaces[x].projects = projects.filter((item, index) => {
-               return namespaces[x].namespace === item.team.getNamespace()
+                return namespaces[x].namespace === item.team.getNamespace()
             }).map(item => {
-                return { name: item.name, hash: `${namespaces[x].namespace}/${item.name}`};
+                return { name: item.name, hash: `${namespaces[x].namespace}/${item.name}` };
             });
         }
 
