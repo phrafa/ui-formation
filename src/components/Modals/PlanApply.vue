@@ -163,9 +163,7 @@ export default {
   },
   methods: {
     createApplication() {
-      console.log(this.formData)
-      //window.electron.send('sendApplication', this.formData)
-      window.electron.send("sendApplication", true);
+      window.electron.send("sendApplication", Object.fromEntries(Object.entries(this.formData)));
     }
   }
 }

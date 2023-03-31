@@ -1,4 +1,4 @@
-class App {
+export class App {
     constructor(name, namespace, squadName, tribeName,language, ingress, database, queues, buckets, envs) {
         this.name = name 
         this.namespace = namespace
@@ -13,4 +13,3 @@ class App {
     }
 }
 
-module.exports = App
