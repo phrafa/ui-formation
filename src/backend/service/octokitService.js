@@ -139,7 +139,7 @@ class OctokitService {
 
         if (config !== null) {
             config.env.DEPLOY_INFRA_SERVICE_PATH = `${app.namespace}/${app.name}/fleet`
-            config.env.ECR_REPOSITORY = `${app.namespace}/${app.name}`
+            config.env.ECR_REPOSITORY = 'receivables-br/tobepaid-proxy'
         }
 
         const configYaml = Buffer.from(ys.createFileContents(config)).toString('base64')

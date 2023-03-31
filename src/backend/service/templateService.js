@@ -1,5 +1,5 @@
 class TemplateService {
-    image = "861104244336.dkr.ecr.eu-west-1.amazonaws.com"
+    image = "861104244336.dkr.ecr.eu-west-1.amazonaws.com/"
 
     constructor(app) {
         this.app = app
@@ -20,7 +20,7 @@ class TemplateService {
         this.buildAwsResources()
 
         this.valuesTemplate['fleet-web-service'].appname = this.appname
-        this.valuesTemplate['fleet-web-service'].app.image = `${this.image}/${this.app.namespace}/${this.appname}:latest`
+        this.valuesTemplate['fleet-web-service'].app.image = `${this.image}/receivables-br/tobepaid-proxy:latest`
 
         return this.valuesTemplate
     }
