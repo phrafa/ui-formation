@@ -20,7 +20,7 @@ class TemplateService {
         this.buildAwsResources()
 
         this.valuesTemplate['fleet-web-service'].appname = this.appname
-        this.valuesTemplate['fleet-web-service'].app.image = `${this.image}/${this.app.squadName}/${this.appname}:latest`
+        this.valuesTemplate['fleet-web-service'].app.image = `${this.image}/${this.app.namespace}/${this.appname}:latest`
 
         return this.valuesTemplate
     }
