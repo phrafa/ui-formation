@@ -49,6 +49,10 @@ export class UserService {
     async loadProjectContents(project, environment) {
         return await this.octokitService.getDeployInfraContent(project, environment)
     }
+
+    async createProjectRepository(project, template) {
+        return await this.octokitService.createProjectRepository(project, template)
+    }
     
 }
 

@@ -115,6 +115,16 @@ class OctokitService {
         return (new DeployInfraService()).getProjectContent(content)
     }
 
+    async createProjectRepository(project, template) {
+        return await this.octokit.rest.repos.createUsingTemplate({
+            template_owner: this.sumupOwner,
+            template_repo: template,
+            owner: this.sumupOwner,
+            name: project.name,
+            private: true
+        });
+    }
+
 }
 
 module.exports = OctokitService;
