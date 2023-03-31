@@ -8,11 +8,15 @@ export async function execute(event, args) {
 
         const projects = await user.loadProjects()
 
-        console.log({ projects })
-        await user.loadSumupEmail()
-        console.log(user.sumupEmail)
+        const formatedResponse = projects.map(project => {
+            const splited = project.split('/')
+            return {
+                squad: splited[0],
+                project: splited[1]
+            }
+        })
 
-        event.reply('getProjectsControler', projects)
+        event.reply('getProjectsControler', formatedResponse)
     } catch (error) {
         console.log({ error })
     }
