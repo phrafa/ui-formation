@@ -8,7 +8,7 @@
     "dependencies": [
         {
             "name": "fleet-web-service",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "repository": "oci://861104244336.dkr.ecr.eu-west-1.amazonaws.com"
         },
         {

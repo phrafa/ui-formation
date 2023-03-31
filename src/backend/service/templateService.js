@@ -16,7 +16,7 @@ class TemplateService {
     buildValuesContent() {
         this.buildGlobal()
         this.buildIngress()
-        this.buildDBSecrets()
+        //this.buildDBSecrets()
         this.buildAwsResources()
 
         this.valuesTemplate['fleet-web-service'].appname = this.appname

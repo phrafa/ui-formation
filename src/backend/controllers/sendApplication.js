@@ -11,9 +11,9 @@ export async function execute(event, args) {
     
     let app = new App(
         args.projectName, 
-        tribe[2], 
-        tribe[1], 
-        tribe[0],
+        tribe[2].replaceAll(' ', ''), 
+        tribe[1].replaceAll(' ', ''), 
+        tribe[0].replaceAll(' ', ''),
         'nodejs', 
         args.ingress,
         args.rds, 
