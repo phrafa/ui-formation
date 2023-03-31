@@ -1,7 +1,7 @@
 const yaml = require("js-yaml");
 
 class YamlService {
-    async getFileContents(fileContent) {
+    getFileContents(fileContent) {
         let data
         try {
           data = yaml.load(fileContent);

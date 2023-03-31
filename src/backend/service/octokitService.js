@@ -2,6 +2,7 @@ const { Octokit } = require("octokit");
 const PermissionService = require("./permissionService");
 const Project = require("./../entities/project");
 const Environment = require("../entities/environment");
+const DeployInfraService = require("./deployInfraService");
 
 class OctokitService {
     fleetRepository = "fleet"
@@ -41,10 +42,10 @@ class OctokitService {
         const authenticatedEmail = await this.getSumupEmail()
 
         const yamlFiles = await this.readDirContent(this.sumupOwner, this.fleetRepository, "permissions");
+        const ps = new PermissionService();
 
         const promises = await yamlFiles.map(async (file)=> {
             const content = await this.readFileContent(this.sumupOwner, this.fleetRepository, file.path)
-            const ps = new PermissionService();
             const team = await ps.getTeam(content)
             if(team.isMember(authenticatedEmail)) {
                 return team
@@ -56,17 +57,17 @@ class OctokitService {
     }
 
     async readFileContent(owner, repository, path) {
-        const contentData = await this.octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-            owner: owner,
-            repo: repository,
-            path: path,
-            headers: {
-              'X-GitHub-Api-Version': '2022-11-28'
-            }
-          })
+        try {
+            const contentData = await this.octokit.rest.repos.getContent({
+                owner: owner,
+                repo: repository,
+                path: path
+              })
 
-        return Buffer.from(contentData['data'].content, 'base64').toString();
-
+            return Buffer.from(contentData.data.content, 'base64').toString();
+        } catch (error) {
+            return null
+        }
     }
 
     async readFiles(owner, repository, path) {
@@ -80,7 +81,7 @@ class OctokitService {
     async readDirContent(owner, repository, path) {
         const files = await this.readFiles(owner, repository, path);
 
-        return files['data'].filter((file) => {
+        return files.data.filter((file) => {
             return file.name.includes(".yaml");
         })
     }
@@ -88,7 +89,7 @@ class OctokitService {
     async readDirs(owner, repository, path) {
         const files = await this.readFiles(owner, repository, path);
 
-        return files['data'].filter((file) => {
+        return files.data.filter((file) => {
             return file.type === "dir";
         })
     }
@@ -96,7 +97,7 @@ class OctokitService {
     async getProjectsByTeamNamespace(teams) {
         const namespaces = await teams.map(async (team) => {
             const projects = await this.readDirs(this.sumupOwner, this.deployInfraRepository, `projects/${team.getNamespace()}`)
-            return projects.map((file) => { 
+            return projects.map((file) => {
                 return new Project(file.name, team.getNamespace(), team.getSquad(), null)
             })
         })
@@ -104,10 +105,14 @@ class OctokitService {
         const projects = (await Promise.all(namespaces)).flat()
         return await Promise.all(projects.map(async (project) => {
             const environmentsData = await this.readDirs(this.sumupOwner, this.deployInfraRepository, `projects/${project.namespace}/${project.name}`)
-            const environments = environmentsData.map((envData)=> new Environment(envData["name"]))
-            project.environments = environments
+            project.environments = environmentsData.map((envData)=> new Environment(envData["name"]))
             return project
         }))
+    }
+
+    async getDeployInfraContent(project, environment) {
+        const content = await this.readFileContent(this.sumupOwner, this.deployInfraRepository, `projects/${project.namespace}/${project.name}/${environment.name}/values.yaml`)
+        return (new DeployInfraService()).getProjectContent(content)
     }
 
 }
