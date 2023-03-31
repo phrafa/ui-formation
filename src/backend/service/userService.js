@@ -1,20 +1,22 @@
-const OctokitService  = require("./octokitService")
+const OctokitService = require("./octokitService")
+import { LoginAuthService } from './loginAuthService'
 
-class UserService {
+
+export class UserService {
     teams = []
     projects = []
     sumupEmail = []
     avatar = null
     token = null
 
-    constructor(){
+    constructor() {
         this.loadToken()
         this.octokitService = new OctokitService(this.token)
         this.loadAvatar()
     }
-    
-    loadSumupEmail() {
-        this.sumupEmail = this.octokitService.getSumupEmailI()
+
+    async loadSumupEmail() {
+        this.sumupEmail = await this.octokitService.getSumupEmail()
     }
 
     loadAvatar() {
@@ -22,7 +24,9 @@ class UserService {
     }
 
     loadToken() {
-        this.token = ''
+        const loginService = new LoginAuthService()
+
+        this.token = loginService.getLoginToken()
     }
     async loadTeams() {
         this.teams = await this.octokitService.getAuthenticatedTeams()
@@ -30,19 +34,17 @@ class UserService {
 
     async loadProjects() {
 
-        if(this.teams.length === 0) {
+        if (this.teams.length === 0) {
             await this.loadTeams();
         }
-        
+
         const teamsName = this.teams.map((team) => {
             return team.getNamespaces()
         })
 
         return this.octokitService.getProjectsByTeamNamespace(teamsName)
-        
-    }
-    
-}
 
-module.exports = UserService
+    }
+
+}
 
