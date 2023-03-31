@@ -15,8 +15,10 @@ export class UserService {
         this.loadAvatar()
     }
 
+
     async loadSumupEmail() {
         this.sumupEmail = await this.octokitService.getSumupEmail()
+
     }
 
     loadAvatar() {
@@ -28,6 +30,7 @@ export class UserService {
 
         this.token = loginService.getLoginToken()
     }
+
     async loadTeams() {
         this.teams = await this.octokitService.getAuthenticatedTeams()
     }
@@ -38,13 +41,15 @@ export class UserService {
             await this.loadTeams();
         }
 
-        const teamsName = this.teams.map((team) => {
-            return team.getNamespaces()
-        })
 
-        return this.octokitService.getProjectsByTeamNamespace(teamsName)
-
+        return this.octokitService.getProjectsByTeamNamespace(this.teams)
+        
     }
 
+    async loadProjectContents(project, environment) {
+        return await this.octokitService.getDeployInfraContent(project, environment)
+    }
+    
 }
+
 

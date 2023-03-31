@@ -1,7 +1,11 @@
 <template>
   <div class="columns">
     <div class="left-column">
+
       <RespositoryCards />
+
+      <FloatingActionButton />
+
     </div>
     <TwoColumnLayout />
   </div>
@@ -22,16 +26,7 @@ export default {
 
     };
   },
-  methods: {
-    onButtonClick() {
-      window.electron.send("testeOnce", "oi sp");
-      window.electron.receive("testeOnce", (data) => {
-        console.log(`Received ${data} from main process`);
-      });
-
-
-    },
-  },
+  
 };
 </script>
   

@@ -6,22 +6,28 @@
       <div class="control-icon minimize" @click="minimize"></div>
       <div class="control-icon maximize" @click="maximizeRestore"></div>
     </div>
-    <div class="app-title"></div>
+    <div class="app-title">
+      <!-- <div><ProfileAvatar  name="John Doe" image="https://picsum.photos/id/237/200/200" /></div> -->
+    </div>
   </div>
+
 </template>
   
 <script>
-//import { getCurrentInstance } from "vue";
+// import ProfileAvatar from './ProfileAvatar.vue'
 
 export default {
-  data() {
-
-    return {
-      isMac: true,
-      isMaximized: false,
-      smaillscreen: true
-    }
+  components: {
+    
   },
+  data: () => ({
+    isMac: true,
+    isMaximized: false,
+    smaillscreen: true,
+
+
+  }),
+
   methods: {
     close() {
       console.log('close')

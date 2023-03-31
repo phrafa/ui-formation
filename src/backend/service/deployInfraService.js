@@ -1,9 +1,9 @@
 const YamlService = require("./yamlService");
 
 class DeployInfraService {
-    async getProjects(fileContent) {
+    getProjectContent(fileContent) {
         const yamlService = new YamlService()
-        return await yamlService.getFileContents(fileContent)
+        return yamlService.getFileContents(fileContent)
     }
 }
 
