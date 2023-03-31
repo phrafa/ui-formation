@@ -59,9 +59,15 @@ export class UserService {
         // criar repositorio do projeto verificando linguagem
         const template = this.getTemplate(app)
         this.createProjectRepository(app,  template)
+
         // criar branch para o projeto criado
+        const createBranchName = `${app.namee}-create`
+        const createBranch = this.octokitService.createBranch(this.octokitService.deployInfraRepository, createBranchName)
+
         // criar commits para deploy-infra
+
         // criar PR para master
+        this.octokitService.createPullRequest(this.octokitService.deployInfraRepository, app.name, createBranchName)
     }
 
     async getTemplate(app) {

@@ -153,7 +153,8 @@ class OctokitService {
         return branches['data']['commit']['sha']   
     }
 
-    async createBranch(repository, branchName, sha) {
+    async createBranch(repository, branchName) {
+        const sha = this.getBranchSha(repository, branchName)
         const branch = await this.octokit.request('POST /repos/{owner}/{repo}/git/refs', {
             owner: this.sumupOwner,
             repo: repository,
