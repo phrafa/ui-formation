@@ -10,15 +10,20 @@ export class createApplicationService {
 
     async createApp() {
         this.event.reply('sendApplication', {
-            "title": "Await creating resource...",
-            "describe": "<3"
+            "title": "Loading user info",
+            "describe": "connecting into github"
         })
-        
+
+        this.event.reply('sendApplication', {
+            "title": "waiting resource create...",
+            "describe": "[...]"
+        })
+
         await this.user.createApp(this.app)
 
         this.event.reply('sendApplication', {
-            "title": "Deploy complete",
-            "describe": "Make with love"
+            "title": "Deploy completed",
+            "describe": "XBOX!"
         })
     }
 c}

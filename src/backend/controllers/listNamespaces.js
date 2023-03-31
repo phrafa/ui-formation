@@ -8,7 +8,7 @@ export async function execute(event, args) {
         const namespaces = projects.filter((item, index) => {
             return projects.findIndex(obj => obj.team.getNamespace() === item.team.getNamespace()) === index;
         }).map(item => {
-            return `${item.team.getNamespace()}`
+            return `${item.team.getTribe()}/${item.team.getSquad()}/${item.team.getNamespace()}`
         });
 
         event.reply('listNamespaces', namespaces)
