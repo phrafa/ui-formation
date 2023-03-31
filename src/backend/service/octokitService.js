@@ -121,25 +121,24 @@ class OctokitService {
         return await this.octokit.rest.repos.createUsingTemplate({
             template_owner: this.sumupOwner,
             template_repo: template,
-            owner: "phrafa", // TODO: change to sumup
+            owner: "vanderson139", // TODO: change to sumup
             name: project.name,
             private: true
         });
     }
 
     async updateRepositoryWorkflow(project, repo) {
-        return this.readFileContent(repo.owner.login, repo.name, `.github/workflows/ci-cd.yaml`)
-            .then(content => {
-                let config = (new YamlService()).getFileContents(content)
+        const ys = new YamlService()
+        let config = require("./../templates/ci-cd.json")
 
-                if (config !== null) {
-                    config.env.DEPLOY_INFRA_SERVICE_PATH = `${project.team.getNamespace()}/${project.name}/fleet`
-                    config.env.ECR_REPOSITORY = `${project.team.getNamespace()}/${project.name}`
-                }
+        if (config !== null) {
+            config.env.DEPLOY_INFRA_SERVICE_PATH = `${project.team.getNamespace()}/${project.name}/fleet`
+            config.env.ECR_REPOSITORY = `${project.team.getNamespace()}/${project.name}`
+        }
 
-                // TODO: commit file
-                return config
-            })
+        const configYaml = Buffer.from(ys.createFileContents(config)).toString('base64')
+
+        return this.createCommit(repo.owner.login, repo.name, `.github/workflows/ci-cd.yaml`, "main", configYaml, "Update ci-cd workflow")
     }
 
     async getBranchSha(repository, branchName) {
@@ -167,21 +166,14 @@ class OctokitService {
         return branch['data']
     }
 
-    async createCommit(repository, path, branch, content, message, userData) {
+    async createCommit(owner, repository, path, branch, content, message) {
         const commit = this.octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-            owner: this.sumupOwner,
+            owner: owner,
             repo: repository,
             path: path,
             branch: branch, 
             message: message,
-            committer: {
-              name: userData.name,
-              email: userData.email
-            },
-            content: content,
-            headers: {
-              'X-GitHub-Api-Version': '2022-11-28'
-            }
+            content: content
         });
         
         return commit

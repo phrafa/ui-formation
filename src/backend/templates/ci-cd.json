@@ -1,0 +1,93 @@
+{
+  "name": "Continuous Delivery",
+  "on": {
+    "push": {
+      "branches": [
+        "develop"
+      ]
+    }
+  },
+  "env": {
+    "ENVIRONMENT": "dev",
+    "DEPLOY_INFRA_SERVICE_PATH": "namespace/application/fleet",
+    "ECR_REGISTRY": "861104244336.dkr.ecr.eu-west-1.amazonaws.com",
+    "ECR_REPOSITORY": "namespace/application"
+  },
+  "jobs": {
+    "build-and-push": {
+      "runs-on": "ubuntu-latest",
+      "permissions": {
+        "id-token": "write",
+        "contents": "read"
+      },
+      "outputs": {
+        "docker_image": "${{ env.docker_image }}"
+      },
+      "steps": [
+        {
+          "name": "Configure AWS credentials",
+          "uses": "aws-actions/configure-aws-credentials@master",
+          "with": {
+            "role-to-assume": "arn:aws:iam::861104244336:role/github-actions",
+            "aws-region": "eu-west-1",
+            "mask-aws-account-id": "no"
+          }
+        },
+        {
+          "name": "Login to Amazon ECR",
+          "id": "login-ecr",
+          "uses": "aws-actions/amazon-ecr-login@v1"
+        },
+        {
+          "name": "Checkout",
+          "uses": "actions/checkout@v2"
+        },
+        {
+          "name": "Build, tag, and push image to Amazon ECR",
+          "id": "push-to-ecr",
+          "env": {
+            "IMAGE_TAG": "${{ github.sha }}"
+          },
+          "run": "docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .\ndocker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG\necho \"docker_image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG\" >> $GITHUB_ENV\n"
+        }
+      ]
+    },
+    "deploy-dev": {
+      "needs": "build-and-push",
+      "runs-on": "ubuntu-latest",
+      "if": "github.ref == 'refs/heads/develop'",
+      "env": {
+        "ENVIRONMENT": "dev"
+      },
+      "steps": [
+        {
+          "name": "Checkout",
+          "uses": "actions/checkout@v3",
+          "with": {
+            "repository": "sumup/deploy-infra",
+            "token": "${{ secrets.GH_ACTIONS_PAT }}"
+          }
+        },
+        {
+          "name": "Update deploy-image",
+          "uses": "mikefarah/yq@v4.25.1",
+          "with": {
+            "cmd": "yq e '.fleet-web-service.app.image = \"${{ needs.build-and-push.outputs.docker_image }}\"' -i 'projects/${{ env.DEPLOY_INFRA_SERVICE_PATH }}-${{ env.ENVIRONMENT }}/values.yaml'"
+          }
+        },
+        {
+          "name": "Check values.yaml",
+          "run": "git diff"
+        },
+        {
+          "uses": "stefanzweifel/git-auto-commit-action@v4.14.1",
+          "with": {
+            "skip_checkout": true,
+            "skip_fetch": true,
+            "commit_message": "Updating service ${{ env.DEPLOY_INFRA_SERVICE_PATH }}-${{ env.ENVIRONMENT }}"
+          }
+        }
+      ]
+    }
+  }
+}
