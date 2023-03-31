@@ -119,7 +119,7 @@ class OctokitService {
         return await this.octokit.rest.repos.createUsingTemplate({
             template_owner: this.sumupOwner,
             template_repo: template,
-            owner: this.sumupOwner,
+            owner: "phrafa", // TODO: change to sumup
             name: project.name,
             private: true
         });
