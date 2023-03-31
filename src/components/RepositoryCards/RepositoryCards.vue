@@ -3,10 +3,10 @@
         <v-col v-for="(item) in items" :key="item.id">
             <v-card style="background-color: lightslategray;">
                 <v-card-title style="font-size: 16px; font-weight: bold;">
-                    {{ item.project }}
+                    {{ item.name }}
                 </v-card-title>
                 <v-card-text style="font-style: italic;">
-                    {{ item.squad }}
+                    {{ item.namespace }}
                 </v-card-text>
             </v-card>
         </v-col>
@@ -33,7 +33,6 @@ export default {
             })
         })
 
-        console.log({ projects })
         return { items: projects }
     }
 }

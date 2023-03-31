@@ -1,12 +1,16 @@
 <template>
   <div class="columns">
     <div class="left-column">
+      <div> 
+        <RespositoryCards />
 
-      <RespositoryCards />
-
-      <FloatingActionButton />
-
+      </div>
+      
+      
     </div>
+    <div>
+        <FloatingActionButton />
+      </div>
     <TwoColumnLayout />
   </div>
 </template>
@@ -14,11 +18,13 @@
 <script>
 import TwoColumnLayout from "../TwoColumnLayout.vue";
 import RespositoryCards from "../RepositoryCards/RepositoryCards.vue"
+import FloatingActionButton from "../Buttons/FloatingActionButton.vue";
 
 export default {
   components: {
     TwoColumnLayout,
-    RespositoryCards
+    RespositoryCards,
+    FloatingActionButton
   },
   data() {
     return {

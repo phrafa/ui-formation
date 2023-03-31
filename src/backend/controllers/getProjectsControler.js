@@ -8,15 +8,9 @@ export async function execute(event, args) {
 
         const projects = await user.loadProjects()
 
-        const formatedResponse = projects.map(project => {
-            const splited = project.split('/')
-            return {
-                squad: splited[0],
-                project: splited[1]
-            }
-        })
+        
 
-        event.reply('getProjectsControler', formatedResponse)
+        event.reply('getProjectsControler', projects)
     } catch (error) {
         console.log({ error })
     }
