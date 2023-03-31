@@ -16,11 +16,11 @@
             "image": "",
             "containerPort": 3000,
             "livenessProbe": {
-                "path": "/health",
+                "path": "/healthcheck",
                 "port": 3000
             },
             "readinessProbe": {
-                "path": "/health",
+                "path": "/healthcheck",
                 "port": 3000
             },
             "env": []

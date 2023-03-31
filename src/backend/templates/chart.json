@@ -1,0 +1,20 @@
+{
+    "apiVersion": "v2",
+    "name": "",
+    "description": "A Helm chart to deploy Fleet Application using a shared web-service chart",
+    "type": "application",
+    "version": "0.1.1",
+    "appVersion": "0.1.1",
+    "dependencies": [
+        {
+            "name": "fleet-web-service",
+            "version": "1.1.1",
+            "repository": "oci://861104244336.dkr.ecr.eu-west-1.amazonaws.com"
+        },
+        {
+            "name": "fleet-aws-resources",
+            "version": "0.4.7",
+            "repository": "oci://861104244336.dkr.ecr.eu-west-1.amazonaws.com"
+        }
+    ]
+}

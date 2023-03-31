@@ -2,7 +2,8 @@ const { Octokit } = require("octokit");
 const PermissionService = require("./permissionService");
 const Project = require("./../entities/project");
 const Environment = require("../entities/environment");
-const DeployInfraService = require("./deployInfraService");
+const YamlService = require("./yamlService");
+const Team = require("./../entities/team");
 
 class OctokitService {
     fleetRepository = "fleet"
@@ -66,6 +67,7 @@ class OctokitService {
 
             return Buffer.from(contentData.data.content, 'base64').toString();
         } catch (error) {
+            console.log(error)
             return null
         }
     }
@@ -112,7 +114,85 @@ class OctokitService {
 
     async getDeployInfraContent(project, environment) {
         const content = await this.readFileContent(this.sumupOwner, this.deployInfraRepository, `projects/${project.team.getNamespace()}/${project.name}/${environment.name}/values.yaml`)
-        return (new DeployInfraService()).getProjectContent(content)
+        return (new YamlService()).getFileContents(content)
+    }
+
+    async createProjectRepository(app, template) {
+        return await this.octokit.rest.repos.createUsingTemplate({
+            template_owner: this.sumupOwner,
+            template_repo: template,
+            owner: this.sumupOwner,
+            name: app.name,
+            private: true
+        });
+    }
+
+    async updateRepositoryWorkflow(app, repo) {
+        const ys = new YamlService()
+        let config = require("./../templates/ci-cd.json")
+
+        if (config !== null) {
+            config.env.DEPLOY_INFRA_SERVICE_PATH = `${app.namespace}/${app.name}/fleet`
+            config.env.ECR_REPOSITORY = `${app.namespace}/${app.name}`
+        }
+
+        const configYaml = Buffer.from(ys.createFileContents(config)).toString('base64')
+
+        return this.createCommit(repo.owner.login, repo.name, `.github/workflows/ci-cd.yaml`, "main", configYaml, "Update ci-cd workflow")
+    }
+
+    async getBranchSha(repository, branchName) {
+        const branches = await this.octokit.request('GET /repos/{owner}/{repo}/branches/{branch}', {
+            owner: this.sumupOwner,
+            repo: repository,
+            branch: branchName,
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        return branches['data']['commit']['sha']   
+    }
+
+    async createBranch(repository, branchName) {
+        const sha = this.getBranchSha(repository, branchName)
+        const branch = await this.octokit.request('POST /repos/{owner}/{repo}/git/refs', {
+            owner: this.sumupOwner,
+            repo: repository,
+            ref: `refs/heads/${branchName}`,
+            sha: sha,
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })
+        return branch['data']
+    }
+
+    async createCommit(owner, repository, path, branch, content, message) {
+        const commit = this.octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+            owner: owner,
+            repo: repository,
+            path: path,
+            branch: branch, 
+            message: message,
+            content: content
+        });
+        
+        return commit
+    }
+
+    async createPullRequest(repository, appName, branchName) {
+        const pr = await octokit.request('POST /repos/{owner}/{repo}/pulls', {
+            owner: this.sumupOwner,
+            repo: repository,
+            title: `create app ${appName}`,
+            body: 'Automation to create fleet app!',
+            head: `${username}:${branchName}}`,
+            base: 'master',
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })
+        return pr
     }
 
 }

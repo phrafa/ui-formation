@@ -80,6 +80,12 @@
 
 <script>
 export default {
+  props: {
+    formData: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data () {
     return {
       dialog: false,

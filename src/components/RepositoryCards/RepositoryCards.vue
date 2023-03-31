@@ -47,8 +47,9 @@ export default {
     methods: {
         submit() {
             setTimeout(() => {
+                window.electron.send("createNewApp", true);
                 window.electron.send("getProjectDetails", this.selected);
-            }, 1000)
+            }, 100)
             // console.log(this.selected); // This will output the selected value of the radio button
         }
     }
