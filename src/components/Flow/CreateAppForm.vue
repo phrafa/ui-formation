@@ -1,7 +1,7 @@
 <template>
     <div class="center-column">
         <div class="create-app-form">
-          <v-form v-model="valid" @submit.prevent="onSubmit">
+          <v-form  @submit.prevent="onSubmit">
             <v-radio-group inline v-model="form.bodyplate">
             <v-container class="create-app-form">
               <v-row>
@@ -88,7 +88,11 @@
               
                 <v-col  md="6">
                   <v-textarea v-model="form.sqs"  prepend-icon="mdi-pencil" label="SQS (delimiter ' , ')" variant="outlined"></v-textarea>
-                </v-col>                
+                </v-col>
+                
+                <v-col  md="6">
+                  <v-textarea v-model="form.envVar"  prepend-icon="mdi-pencil" label="ENV (KEY=VAL)" variant="outlined"></v-textarea>
+                </v-col>   
               </v-row>
             </v-container>
             
@@ -115,7 +119,8 @@
           ingress: '',
           rds: '',
           sqs: '',
-          s3: ''
+          s3: '',
+          envVar: ''
       })
 
       onMounted(() => {
@@ -158,7 +163,9 @@
   
   .create-app-form {
     padding: 15px;
+    color: #FFF
   }
+  
 
   .v-card {
     background-color: #333;

@@ -37,49 +37,116 @@
             <v-toolbar-items>
               <v-btn
                 variant="text"
-                @click="dialog = false"
+                @click="createApplication"
               >
                 Save
               </v-btn>
             </v-toolbar-items>
           </v-toolbar>
-          <v-list
-            lines="two"
-            subheader
-          >
-            <v-list-subheader>User Controls</v-list-subheader>
-            <v-list-item title="Content filtering" subtitle="Set the content filtering level to restrict apps that can be downloaded"></v-list-item>
-            <v-list-item title="Password" subtitle="Require password for purchase or use password to restrict purchase"></v-list-item>
-          </v-list>
-          <v-divider></v-divider>
-          <v-list
-            lines="two"
-            subheader
-          >
-            <v-list-subheader>General</v-list-subheader>
-            <v-list-item title="Notifications" subtitle="Notify me about updates to apps or games that I downloaded">
-              <template v-slot:prepend>
-                <v-checkbox v-model="notifications"></v-checkbox>
-              </template>
-            </v-list-item>
-            <v-list-item title="Sound" subtitle="Auto-update apps at any time. Data charges may apply">
-              <template v-slot:prepend>
-                <v-checkbox v-model="sound"></v-checkbox>
-              </template>
-            </v-list-item>
-            <v-list-item title="Auto-add widgets" subtitle="Automatically add home screen widgets">
-              <template v-slot:prepend>
-                <v-checkbox v-model="widgets"></v-checkbox>
-              </template>
-            </v-list-item>
-          </v-list>
+          <div style="height: 100%; color: #FFF; width: 100%; background-color: #222;">
+            <v-container >
+              <v-row>
+                  <v-col md="4"> 
+                    <v-card>
+                      <v-card-title style="font-size: 16px; font-weight: bold">
+                          Project Name
+                      </v-card-title>
+
+                      <v-card-text style="font-style: italic">
+                        {{ formData.projectName }}
+                      </v-card-text>
+                    </v-card>
+                   
+                    <v-card style="background-color: #333; color: #fff">
+                      <v-card-title style="font-size: 16px; font-weight: bold">
+                          Tribe and Squad
+                      </v-card-title>
+
+                      <v-card-text style="font-style: italic">
+                        {{ formData.tribe }}
+                      </v-card-text>
+                    </v-card>
+
+                    <v-card style="background-color: #333; color: #fff">
+                      <v-card-title style="font-size: 16px; font-weight: bold">
+                          Bodyplate
+                      </v-card-title>
+
+                      <v-card-text style="font-style: italic">
+                        {{ formData.bodyplate }}
+                      </v-card-text>
+                    </v-card>
+                    
+                    <v-card style="background-color: #333; color: #fff">
+                      <v-card-title style="font-size: 16px; font-weight: bold">
+                          Ingress
+                      </v-card-title>
+
+                      <v-card-text style="font-style: italic">
+                        {{ formData.ingress }}
+                      </v-card-text>
+                    </v-card>
+
+                    <v-card style="background-color: #333; color: #fff">
+                      <v-card-title style="font-size: 16px; font-weight: bold">
+                          Relational Database
+                      </v-card-title>
+
+                      <v-card-text style="font-style: italic">
+                        {{ formData.rds }}
+                      </v-card-text>
+                    </v-card>
+
+                    <v-card style="background-color: #333; color: #fff">
+                      <v-card-title style="font-size: 16px; font-weight: bold">
+                          Buckets S3
+                      </v-card-title>
+
+                      <v-card-text style="font-style: italic">
+                        {{ formData.s3 }}
+                      </v-card-text>
+                    </v-card>
+
+                    <v-card style="background-color: #333; color: #fff">
+                      <v-card-title style="font-size: 16px; font-weight: bold">
+                          SQS
+                      </v-card-title>
+
+                      <v-card-text style="font-style: italic">
+                        {{ formData.sqs }}
+                      </v-card-text>
+                    </v-card>
+
+                    <v-card style="background-color: #333; color: #fff">
+                      <v-card-title style="font-size: 16px; font-weight: bold">
+                        Environment variables
+                      </v-card-title>
+
+                      <v-card-text style="font-style: italic">
+                        {{ formData.envVar }}
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+
+                  <v-col md="8">  
+                    <TimeLine />
+                  </v-col>
+              </v-row>
+            </v-container>      
+            
+          </div>
         </v-card>
       </v-dialog>
     </v-row>
   </template>
 
 <script>
+import TimeLine from '@/components/Modals/TimeLine.vue'
+
 export default {
+  components: {
+    TimeLine
+  },
   props: {
     formData: {
       type: Object,
@@ -94,6 +161,13 @@ export default {
       widgets: false,
     }
   },
+  methods: {
+    createApplication() {
+      console.log(this.formData)
+      //window.electron.send('sendApplication', this.formData)
+      window.electron.send("sendApplication", true);
+    }
+  }
 }
 </script>
 
@@ -101,6 +175,17 @@ export default {
 .dialog-bottom-transition-enter-active,
 .dialog-bottom-transition-leave-active {
   transition: transform .2s ease-in-out;
+}
+
+.v-card {
+  background-color: #333; color: #fff;
+  margin: 5px;
+}
+
+.v-container {
+  width: 100%;
+  max-width: 100%;
+  padding: 30px;
 }
 
 .v-toolbar__content {
