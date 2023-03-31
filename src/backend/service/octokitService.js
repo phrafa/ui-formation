@@ -167,11 +167,12 @@ class OctokitService {
         return branch['data']
     }
 
-    async createCommit(repository, path, content, message, userData) {
-        const commit = await this.octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+    async createCommit(repository, path, branch, content, message, userData) {
+        const commit = this.octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
             owner: this.sumupOwner,
             repo: repository,
             path: path,
+            branch: branch, 
             message: message,
             committer: {
               name: userData.name,
@@ -182,6 +183,7 @@ class OctokitService {
               'X-GitHub-Api-Version': '2022-11-28'
             }
         });
+        
         return commit
     }
 
