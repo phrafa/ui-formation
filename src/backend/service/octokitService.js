@@ -117,23 +117,23 @@ class OctokitService {
         return (new YamlService()).getFileContents(content)
     }
 
-    async createProjectRepository(project, template) {
+    async createProjectRepository(app, template) {
         return await this.octokit.rest.repos.createUsingTemplate({
             template_owner: this.sumupOwner,
             template_repo: template,
-            owner: "vanderson139", // TODO: change to sumup
-            name: project.name,
+            owner: this.sumupOwner,
+            name: app.name,
             private: true
         });
     }
 
-    async updateRepositoryWorkflow(project, repo) {
+    async updateRepositoryWorkflow(app, repo) {
         const ys = new YamlService()
         let config = require("./../templates/ci-cd.json")
 
         if (config !== null) {
-            config.env.DEPLOY_INFRA_SERVICE_PATH = `${project.team.getNamespace()}/${project.name}/fleet`
-            config.env.ECR_REPOSITORY = `${project.team.getNamespace()}/${project.name}`
+            config.env.DEPLOY_INFRA_SERVICE_PATH = `${app.namespace}/${app.name}/fleet`
+            config.env.ECR_REPOSITORY = `${app.namespace}/${app.name}`
         }
 
         const configYaml = Buffer.from(ys.createFileContents(config)).toString('base64')
@@ -177,6 +177,21 @@ class OctokitService {
         });
         
         return commit
+    }
+
+    async createPullRequest(repository, appName, branchName) {
+        const pr = await octokit.request('POST /repos/{owner}/{repo}/pulls', {
+            owner: this.sumupOwner,
+            repo: repository,
+            title: `create app ${appName}`,
+            body: 'Automation to create fleet app!',
+            head: `${username}:${branchName}}`,
+            base: 'master',
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })
+        return pr
     }
 
 }

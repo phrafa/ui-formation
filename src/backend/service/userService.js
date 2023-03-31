@@ -50,11 +50,27 @@ export class UserService {
         return await this.octokitService.getDeployInfraContent(project, environment)
     }
 
-    async createProjectRepository(project, template) {
-        return await this.octokitService.createProjectRepository(project, template)
-          .then((response) => setTimeout(() => this.octokitService.updateRepositoryWorkflow(project, response.data), 2000))
+    async createProjectRepository(app, template) {
+        return await this.octokitService.createProjectRepository(app, template)
+          .then((response) => setTimeout(() => this.octokitService.updateRepositoryWorkflow(app, response.data), 2000))
     }
     
+    async createApp(app, user) {
+        // criar repositorio do projeto verificando linguagem
+        const template = this.getTemplate(app)
+        this.createProjectRepository(app,  template)
+        // criar branch para o projeto criado
+        // criar commits para deploy-infra
+        // criar PR para master
+    }
+
+    async getTemplate(app) {
+        template = "ui-formation-example-nodejs"
+        if (app.language == "nodejs") {
+            template = "ui-formation-example-nodejs"
+        }
+    }
+
 }
 
 
