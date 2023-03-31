@@ -78,7 +78,7 @@ export class UserService {
             this.octokitService.createCommit(
                 this.octokitService.sumupOwner,
                 this.octokitService.deployInfraRepository,
-                `projects/${app.tribeName}/${app.name}/fleet-dev/${file.name}`,
+                `projects/${app.namespace}/${app.name}/fleet-dev/${file.name}`,
                 createBranchName,
                 file.content,
                 message
