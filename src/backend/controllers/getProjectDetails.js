@@ -1,3 +1,4 @@
+import Environment from '../entities/environment';
 import { UserService } from '../service/userService'
 
 export async function execute(event, args) {
@@ -10,13 +11,13 @@ export async function execute(event, args) {
         console.log(JSON.stringify(project))
 
 
-        const repo = await user.loadProjectContents(project, 'dev')
+        const repo = await user.loadProjectContents(project, new Environment("fleet-live"))
 
 
         console.log({ repo })
 
 
-        event.reply('getProjectDetails', 'namespaces')
+        event.reply('getProjectDetails', repo)
     } catch (error) {
         console.log({ error })
     }
