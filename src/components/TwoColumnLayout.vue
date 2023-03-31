@@ -26,6 +26,13 @@ export default {
         if (data)
           componentActive.value = 'CreateAppForm'
       })
+
+      window.electron.receive("getProjectDetails", (data) => {
+        if (data) {
+          const newWindow = window.open('', '_blank');
+          newWindow.document.write(JSON.stringify(data));
+        }
+      })
     })
 
     return {
