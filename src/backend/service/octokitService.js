@@ -141,6 +141,49 @@ class OctokitService {
         return config
     }
 
+    async getBranchSha(repository, branchName) {
+        const branches = await this.octokit.request('GET /repos/{owner}/{repo}/branches/{branch}', {
+            owner: this.sumupOwner,
+            repo: repository,
+            branch: branchName,
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        return branches['data']['commit']['sha']   
+    }
+
+    async createBranch(repository, branchName, sha) {
+        const branch = await this.octokit.request('POST /repos/{owner}/{repo}/git/refs', {
+            owner: this.sumupOwner,
+            repo: repository,
+            ref: `refs/heads/${branchName}`,
+            sha: sha,
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })
+        return branch['data']
+    }
+
+    async createCommit(repository, path, content, message, userData) {
+        const commit = await this.octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+            owner: this.sumupOwner,
+            repo: repository,
+            path: path,
+            message: message,
+            committer: {
+              name: userData.name,
+              email: userData.email
+            },
+            content: content,
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        return commit
+    }
+
 }
 
 module.exports = OctokitService;
