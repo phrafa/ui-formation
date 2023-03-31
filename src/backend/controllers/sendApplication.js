@@ -7,13 +7,13 @@ export async function execute(event, args) {
     args.rds.split(',')
     args.s3.split(',')
     args.envVar.split('\n')
-    args.tribe.split('/')
+    let tribe = args.tribe.split('/')
     
     let app = new App(
         args.projectName, 
-        args.tribe[2], 
-        args.tribe[1], 
-        args.tribe[0],
+        tribe[2], 
+        tribe[1], 
+        tribe[0],
         'nodejs', 
         args.ingress,
         args.rds, 
