@@ -18,9 +18,11 @@
   
   <style scoped>
   .floating-action-button {
+    background-color: #222;
     position: fixed;
     border-top: 1px solid #333;
-    bottom: 10px;
+    border-right: 1px solid #333;
+    bottom: 0px;
     color: #ffffff;
     width: 25%;
     height: 50px;

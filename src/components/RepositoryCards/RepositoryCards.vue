@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-col v-for="(item) in items" :key="item.id">
-            <v-card style="background-color: lightslategray;">
+            <v-card style="background-color: #333; color:#FFF">
                 <v-card-title style="font-size: 16px; font-weight: bold;">
                     {{ item.name }}
                 </v-card-title>
