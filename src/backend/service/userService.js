@@ -7,12 +7,14 @@ export class UserService {
     projects = []
     sumupEmail = []
     avatar = null
+    username = null
     token = null
 
     constructor() {
         this.loadToken()
         this.octokitService = new OctokitService(this.token)
         this.loadAvatar()
+        this.loadUsername()
     }
 
 
@@ -23,6 +25,10 @@ export class UserService {
 
     loadAvatar() {
         return this.avatar = this.octokitService.getAuthenticatedAvatar()
+    }
+
+    loadUsername() {
+        return this.username = this.octokitService.getAuthenticatedUsername()
     }
 
     loadToken() {
@@ -55,26 +61,45 @@ export class UserService {
           .then((response) => setTimeout(() => this.octokitService.updateRepositoryWorkflow(app, response.data), 2000))
     }
     
-    async createApp(app, user) {
+    async createApp(app) {
         // criar repositorio do projeto verificando linguagem
         const template = this.getTemplate(app)
-        this.createProjectRepository(app,  template)
+        await this.createProjectRepository(app, template)
 
         // criar branch para o projeto criado
-        const createBranchName = `${app.namee}-create`
-        const createBranch = this.octokitService.createBranch(this.octokitService.deployInfraRepository, createBranchName)
+        const createBranchName = `${app.name}-create`
+        const createBranch = await this.octokitService.createBranch(this.octokitService.deployInfraRepository, createBranchName)
 
         // criar commits para deploy-infra
+        const filesToCommit = this.octokitService.createDeployInfraFiles(app)
 
-        // criar PR para master
-        this.octokitService.createPullRequest(this.octokitService.deployInfraRepository, app.name, createBranchName)
+        const commits = filesToCommit.map((file) => {
+            const message = `Added ${file.name} to ${app.name}`
+            this.octokitService.createCommit(
+                this.octokitService.sumupOwner,
+                this.octokitService.deployInfraRepository,
+                `${app.name}/${file.name}`,
+                createBranchName,
+                file.content,
+                message
+            )
+        })
+
+        return Promise.all(commits).then(() => {
+            // criar PR para master
+            setTimeout(() => {
+                this.octokitService.createPullRequest(this.octokitService.deployInfraRepository, app.name, createBranchName, this.username)
+            }, 2000)
+        })
     }
 
-    async getTemplate(app) {
-        template = "ui-formation-example-nodejs"
-        if (app.language == "nodejs") {
+    getTemplate(app) {
+        let template = "ui-formation-example-nodejs"
+        if (app.language === "nodejs") {
             template = "ui-formation-example-nodejs"
         }
+
+        return template
     }
 
 }

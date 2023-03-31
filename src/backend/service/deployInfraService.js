@@ -4,14 +4,14 @@ const TemplateService = require("./templateService");
 class DeployInfraService {
     image = "861104244336.dkr.ecr.eu-west-1.amazonaws.com"
 
-    createProjectContent(project) {
-        const template = (new TemplateService(project)).buildValuesContent()
+    createAppContent(app) {
+        const template = (new TemplateService(app)).buildValuesContent()
 
         return (new YamlService()).createFileContents(template)
     }
 
-    createChartContent(project) {
-        const template = (new TemplateService(project)).buildChartContent()
+    createChartContent(app) {
+        const template = (new TemplateService(app)).buildChartContent()
 
         return (new YamlService()).createFileContents(template)
     }

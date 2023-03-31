@@ -3,7 +3,7 @@ const PermissionService = require("./permissionService");
 const Project = require("./../entities/project");
 const Environment = require("../entities/environment");
 const YamlService = require("./yamlService");
-const Team = require("./../entities/team");
+const DeployInfraService = require("./deployInfraService");
 
 class OctokitService {
     fleetRepository = "fleet"
@@ -17,6 +17,11 @@ class OctokitService {
     async getAuthenticatedAvatar() {
         const data = await this.octokit.rest.users.getAuthenticated();
         return data['data']['avatar_url']
+    }
+
+    async getAuthenticatedUsername() {
+        const data = await this.octokit.rest.users.getAuthenticated();
+        return data['data']['login']
     }
 
     async getAuthenticatedEmailList() {
@@ -123,6 +128,7 @@ class OctokitService {
             template_repo: template,
             owner: this.sumupOwner,
             name: app.name,
+            include_all_branches: true,
             private: true
         });
     }
@@ -138,7 +144,7 @@ class OctokitService {
 
         const configYaml = Buffer.from(ys.createFileContents(config)).toString('base64')
 
-        return this.createCommit(repo.owner.login, repo.name, `.github/workflows/ci-cd.yaml`, "main", configYaml, "Update ci-cd workflow")
+        return this.createCommit(repo.owner.login, repo.name, `.github/workflows/ci-cd.yaml`, "develop", configYaml, "Update ci-cd workflow")
     }
 
     async getBranchSha(repository, branchName) {
@@ -154,7 +160,7 @@ class OctokitService {
     }
 
     async createBranch(repository, branchName) {
-        const sha = this.getBranchSha(repository, branchName)
+        const sha = await this.getBranchSha(repository, "master")
         const branch = await this.octokit.request('POST /repos/{owner}/{repo}/git/refs', {
             owner: this.sumupOwner,
             repo: repository,
@@ -168,11 +174,13 @@ class OctokitService {
     }
 
     async createCommit(owner, repository, path, branch, content, message) {
+        const sha = await this.getBranchSha(repository, branch)
         const commit = this.octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
             owner: owner,
             repo: repository,
             path: path,
             branch: branch, 
+            sha: sha,
             message: message,
             content: content
         });
@@ -181,18 +189,33 @@ class OctokitService {
     }
 
     async createPullRequest(repository, appName, branchName) {
-        const pr = await octokit.request('POST /repos/{owner}/{repo}/pulls', {
+        const pr = await this.octokit.request('POST /repos/{owner}/{repo}/pulls', {
             owner: this.sumupOwner,
             repo: repository,
             title: `create app ${appName}`,
             body: 'Automation to create fleet app!',
-            head: `${username}:${branchName}}`,
+            head: branchName,
             base: 'master',
             headers: {
               'X-GitHub-Api-Version': '2022-11-28'
             }
         })
         return pr
+    }
+
+    createDeployInfraFiles(app) {
+        const ds = new DeployInfraService()
+
+        return [
+            {
+                name: "Chart.yaml",
+                content: Buffer.from(ds.createChartContent(app)).toString('base64')
+            },
+            {
+                name: "values.yaml",
+                content: Buffer.from(ds.createAppContent(app)).toString('base64')
+            }
+        ]
     }
 
 }

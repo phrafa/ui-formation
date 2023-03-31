@@ -1,7 +1,7 @@
 <template>
   <div class="center-column">
     <div class="create-app-form">
-      <v-form v-model="valid" @submit.prevent="onSubmit">
+      <v-form @submit.prevent="onSubmit">
         <v-radio-group inline v-model="form.bodyplate">
           <v-container class="create-app-form">
             <v-row>
@@ -51,35 +51,21 @@
           </v-row>
         </v-container>
 
-        <v-container class="create-app-form">
-          <v-row>
-            <v-col md="6">
-              <h3>Ingress</h3>
-              <v-radio-group inline v-model="form.ingress">
-                <v-radio label="Private" value="private-svc-only"></v-radio>
-                <v-radio label="Public with SSO" value="private-ui-only"></v-radio>
-              </v-radio-group>
-            </v-col>
+        <v-col md="6">
+          <v-textarea v-model="form.s3" prepend-icon="mdi-folder" label="Buckets S3 (delimiter ' , ')"
+            variant="outlined"></v-textarea>
+        </v-col>
 
-            <v-col md="6">
-              <h3>Relational Database</h3>
-              <v-radio-group inline v-model="form.rds">
-                <v-radio label="RDS Postgres" value="postgres"></v-radio>
-                <v-radio label="RDS Maria DB" value="mariadb"></v-radio>
-              </v-radio-group>
-            </v-col>
+        <v-col md="6">
+          <v-textarea v-model="form.sqs" prepend-icon="mdi-pencil" label="SQS (delimiter ' , ')"
+            variant="outlined"></v-textarea>
+        </v-col>
 
-            <v-col md="6">
-              <v-textarea v-model="form.s3" prepend-icon="mdi-folder" label="Buckets S3 (delimiter ' , ')"
-                variant="outlined"></v-textarea>
-            </v-col>
+        <v-col md="6">
+          <v-textarea v-model="form.envVar" prepend-icon="mdi-pencil" label="ENV (KEY=VAL)"
+            variant="outlined"></v-textarea>
+        </v-col>
 
-            <v-col md="6">
-              <v-textarea v-model="form.sqs" prepend-icon="mdi-pencil" label="SQS (delimiter ' , ')"
-                variant="outlined"></v-textarea>
-            </v-col>
-          </v-row>
-        </v-container>
 
       </v-form>
       <PlanApply :formData="form" />
@@ -89,7 +75,7 @@
     
 <script>
 import PlanApply from '@/components/Modals/PlanApply.vue'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 export default {
   components: {
@@ -104,37 +90,25 @@ export default {
       ingress: '',
       rds: '',
       sqs: '',
-      s3: ''
+      s3: '',
+      envVar: ''
     })
 
-    onMounted(() => {
-      setTimeout(() => {
+    window.electron.receive("getProjectDetails", (data) => {
 
-      }, 100)
-
-
-      window.electron.receive("listNamespaces", (data) => {
-        namespaces.value = data
-      })
-
-      window.electron.receive("getProjectDetails", (data) => {
-
-        console.log('-----')
-        console.log(JSON.stringify(data))
-        if (data) {
-          form.value = {
-            bodyplate: 'node',
-            projectName: data['fleet-web-service'].appname,
-            tribe: data.global.tribe,
-            ingress: '',
-            rds: '',
-            sqs: '',
-            s3: ''
-          }
+      console.log('-----')
+      console.log(JSON.stringify(data))
+      if (data) {
+        form.value = {
+          bodyplate: 'node',
+          projectName: data['fleet-web-service'].appname,
+          tribe: data.global.tribe,
+          ingress: '',
+          rds: '',
+          sqs: '',
+          s3: ''
         }
-      })
-
-
+      }
     })
 
     return {
@@ -164,6 +138,11 @@ export default {
 </script>
     
 <style scoped>
+.create-app-form {
+  padding: 15px;
+  color: #FFF
+}
+
 .create-app-form {
   padding: 15px;
 }
