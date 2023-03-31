@@ -115,9 +115,9 @@
           ingress: '',
           rds: '',
           sqs: '',
-          s3: 'sdsd'
+          s3: ''
       })
-      
+
       onMounted(() => {
         setTimeout(() => {
          
