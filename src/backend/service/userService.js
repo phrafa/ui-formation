@@ -46,15 +46,3 @@ class UserService {
 }
 
 module.exports = UserService;
-
-(async() =>{
-    const us = new UserService()
-    us.loadProjects().then(projects => {
-        projects.map(async project => {
-            const contents = await us.loadProjectContents(project, project.environments[0])
-
-            console.log(project)
-            console.log(contents)
-        })
-    })
-})()
