@@ -22,7 +22,7 @@ class UserService {
     }
 
     loadToken() {
-        this.token = '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'
+        this.token = ''
     }
 
     async loadTeams() {
@@ -42,8 +42,3 @@ class UserService {
 }
 
 module.exports = UserService;
-
-(async() =>{
-    const us = new UserService()
-    console.log( await us.loadProjects())
-})()

@@ -1,6 +1,7 @@
 const { Octokit } = require("octokit");
 const PermissionService = require("./permissionService");
 const Project = require("./../entities/project");
+const Environment = require("../entities/environment");
 
 class OctokitService {
     fleetRepository = "fleet"
@@ -70,7 +71,7 @@ class OctokitService {
 
     async readFiles(owner, repository, path) {
         return await this.octokit.rest.repos.getContent({
-            owner: this.sumupOwner,
+            owner: owner,
             repo: repository,
             path: path,
         });
@@ -95,11 +96,20 @@ class OctokitService {
     async getProjectsByTeamNamespace(teams) {
         const namespaces = await teams.map(async (team) => {
             const projects = await this.readDirs(this.sumupOwner, this.deployInfraRepository, `projects/${team.getNamespace()}`)
-            return projects.map((file) => new Project(file.name, team.getNamespace(), team.getSquad()))
+            return projects.map((file) => { 
+                return new Project(file.name, team.getNamespace(), team.getSquad(), null)
+            })
         })
 
-        return (await Promise.all(namespaces)).flat()
+        const projects = (await Promise.all(namespaces)).flat()
+        return await Promise.all(projects.map(async (project) => {
+            const environmentsData = await this.readDirs(this.sumupOwner, this.deployInfraRepository, `projects/${project.namespace}/${project.name}`)
+            const environments = environmentsData.map((envData)=> new Environment(envData["name"]))
+            project.environments = environments
+            return project
+        }))
     }
+
 }
 
 module.exports = OctokitService;
