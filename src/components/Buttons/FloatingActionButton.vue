@@ -9,7 +9,7 @@
     name: "FloatingActionButton",
     methods: {
       toggleLayout() {
-        console.log('sdsdsd')
+        console.log('sdsdwdsdskdjsdk')
         window.electron.send("createNewApp", true);
     },
     },

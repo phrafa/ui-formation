@@ -3,6 +3,10 @@
     "port": 3000,
     "files": [
         {
+            "path": ".github/workflow/ci-cd.yaml",
+            "content": "RlJPTSBub2RlOjE0CgpXT1JLRElSIC9hcHAKCkNPUFkgcGFja2FnZSouanNvbiAuLwoKUlVOIG5wbSBpbnN0YWxsCgpDT1BZIC4gLgoKRVhQT1NFIDMwMDAKCkNNRCBbICJucG0iLCAic3RhcnQiIF0="
+        },
+        {
             "path": "Dockerfile",
             "content": "RlJPTSBub2RlOjE0CgpXT1JLRElSIC9hcHAKCkNPUFkgcGFja2FnZSouanNvbiAuLwoKUlVOIG5wbSBpbnN0YWxsCgpDT1BZIC4gLgoKRVhQT1NFIDMwMDAKCkNNRCBbICJucG0iLCAic3RhcnQiIF0="
         },

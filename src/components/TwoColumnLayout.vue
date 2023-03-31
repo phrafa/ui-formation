@@ -1,5 +1,5 @@
 <template @createNewApp="teste">
-  <div>
+  <div style="width: 75%;">
     <component v-bind:is="component" />
   </div>
 </template>
@@ -20,11 +20,14 @@ export default {
     onMounted(() => {
       setTimeout(() => {
         console.log('aguarde...')
-      }, 1000)
+      }, 100)
 
       window.electron.receive("createNewApp", (data) => {
-        if (data)
+        if (data) {
           componentActive.value = 'CreateAppForm'
+          window.electron.send("listNamespaces", true);
+        }
+          
       })
     })
 
