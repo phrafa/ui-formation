@@ -2,7 +2,8 @@ const { Octokit } = require("octokit");
 const PermissionService = require("./permissionService");
 const Project = require("./../entities/project");
 const Environment = require("../entities/environment");
-const DeployInfraService = require("./deployInfraService");
+const YamlService = require("./yamlService");
+const Team = require("./../entities/team");
 
 class OctokitService {
     fleetRepository = "fleet"
@@ -112,7 +113,7 @@ class OctokitService {
 
     async getDeployInfraContent(project, environment) {
         const content = await this.readFileContent(this.sumupOwner, this.deployInfraRepository, `projects/${project.team.getNamespace()}/${project.name}/${environment.name}/values.yaml`)
-        return (new DeployInfraService()).getProjectContent(content)
+        return (new YamlService()).getFileContents(content)
     }
 
     async createProjectRepository(project, template) {
@@ -123,6 +124,21 @@ class OctokitService {
             name: project.name,
             private: true
         });
+    }
+
+    async updateRepositoryWorkflow(project, repo) {
+        const content = await this.readFileContent(repo.owner.login, repo.name, `.github/workflows/ci-cd.yaml`)
+
+        let config = (new YamlService()).getFileContents(content)
+
+        if (config !== null) {
+            config.env.DEPLOY_INFRA_SERVICE_PATH = `${project.team.getNamespace()}/${project.name}/fleet`
+            config.env.ECR_REPOSITORY = `${project.team.getNamespace()}/${project.name}`
+        }
+
+        // TODO: commit file
+
+        return config
     }
 
 }

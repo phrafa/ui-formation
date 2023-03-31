@@ -52,6 +52,7 @@ export class UserService {
 
     async createProjectRepository(project, template) {
         return await this.octokitService.createProjectRepository(project, template)
+          .then((repo) => this.octokitService.updateRepositoryWorkflow(project, repo))
     }
     
 }
