@@ -1,8 +1,7 @@
 class Project {
-    constructor(name, namespace, teamName, environments){
+    constructor(name, team, environments) {
         this.name = name
-        this.namespace = namespace
-        this.teamName = teamName
+        this.team = team
         this.environments = environments
     }
 }

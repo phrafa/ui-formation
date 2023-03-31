@@ -11,6 +11,17 @@ class YamlService {
 
         return data
     }
+
+    createFileContents(fileContent) {
+        let data
+        try {
+          data = yaml.dump(fileContent);
+        } catch (e) {
+          console.log(e);
+        }
+
+        return data
+    }
 }
 
 module.exports = YamlService;

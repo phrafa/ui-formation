@@ -1,0 +1,42 @@
+{
+    "global": {
+        "tribe": null,
+        "squad": null
+    },
+    "fleet-web-service": {
+        "ingress": [
+            {
+                "accessType": null,
+                "hosts": []
+            }
+        ],
+        "appname": null,
+        "replicas": 1,
+        "app": {
+            "image": "",
+            "containerPort": 3000,
+            "livenessProbe": {
+                "path": "/health",
+                "port": 3000
+            },
+            "readinessProbe": {
+                "path": "/health",
+                "port": 3000
+            },
+            "env": []
+        }
+    },
+    "fleet-aws-resources": {
+        "s3Bucket": {
+            "enabled": false
+        },
+        "auroraPSQLCluster": {
+            "enabled": false,
+            "parameters": {
+                "databaseName": "",
+                "dbInstanceClass": "db.t3.medium",
+                "engineVersion": "14.6"
+            }
+        }
+    }
+}

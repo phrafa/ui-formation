@@ -98,7 +98,7 @@ class OctokitService {
         const namespaces = await teams.map(async (team) => {
             const projects = await this.readDirs(this.sumupOwner, this.deployInfraRepository, `projects/${team.getNamespace()}`)
             return projects.map((file) => {
-                return new Project(file.name, team.getNamespace(), team.getSquad(), null)
+                return new Project(file.name, team, null)
             })
         })
 
