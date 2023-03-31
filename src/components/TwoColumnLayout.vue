@@ -1,18 +1,46 @@
-<template>
-  <div class="center-column">
-    <div>
-      <div>content</div>
-      <PlanApply />
-    </div>
+<template @createNewApp="teste">
+  <div>
+    <component v-bind:is="component" />
   </div>
 </template>
   
 <script>
-import PlanApply from '@/components/Modals/PlanApply.vue'
+import WelcomePage from '@/components/Flow/WelcomePage.vue'
+import CreateAppForm from './Flow/CreateAppForm.vue';
+import { ref, onMounted } from 'vue'
 
 export default {
   components: {
-    PlanApply
+    WelcomePage,
+    CreateAppForm
+  },
+  setup() {
+    let componentActive = ref('WelcomePage')
+
+    onMounted(() => {
+      setTimeout(() => {
+        console.log('aguarde...')
+      }, 1000)
+
+      window.electron.receive("createNewApp", (data) => {
+        if (data)
+          componentActive.value = 'CreateAppForm'
+      })
+    })
+
+    return {
+      dialog: false,
+      notifications: false,
+      sound: true,
+      widgets: false,
+      component: componentActive,
+    }
+
+  },
+  methods: {
+    teste() {
+      console.log('aaaa')
+    }
   },
   dialog: false,
   notifications: false,
@@ -22,14 +50,3 @@ export default {
 };
 </script>
   
-<style scoped>
-
-.center-column {
-  max-width: 75%;
-}
-
-.dialog-bottom-transition-enter-active,
-.dialog-bottom-transition-leave-active {
-  transition: transform 0.2s ease-in-out;
-}
-</style>

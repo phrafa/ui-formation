@@ -28,9 +28,6 @@ export default {
     onMounted(() => {
       setTimeout(() => {
         window.electron.send("loginAuth", null);
-
-
-
       }, 1000)
 
       window.electron.receive("loginAuth", (data) => {
@@ -38,6 +35,7 @@ export default {
           layout.value = 'PrincipalLayout'
         } else {
           layout.value = 'TokenLogin'
+          
         }
 
 

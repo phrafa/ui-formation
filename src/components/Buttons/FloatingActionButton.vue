@@ -1,5 +1,5 @@
 <template>
-    <div class="floating-action-button" @click="onClick">
+    <div class="floating-action-button">
       <button @click="toggleLayout" class="icon"><i class="material-icons icon-text">add_circle_outline</i> <span class="icon-text">Add Application</span></button>
     </div>
   </template>
@@ -9,7 +9,8 @@
     name: "FloatingActionButton",
     methods: {
       toggleLayout() {
-      this.$emit("toggle-layout");
+        console.log('sdsdsd')
+        window.electron.send("createNewApp", true);
     },
     },
   };
