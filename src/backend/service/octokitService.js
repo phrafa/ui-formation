@@ -104,14 +104,14 @@ class OctokitService {
 
         const projects = (await Promise.all(namespaces)).flat()
         return await Promise.all(projects.map(async (project) => {
-            const environmentsData = await this.readDirs(this.sumupOwner, this.deployInfraRepository, `projects/${project.namespace}/${project.name}`)
+            const environmentsData = await this.readDirs(this.sumupOwner, this.deployInfraRepository, `projects/${project.team.getNamespace()}/${project.name}`)
             project.environments = environmentsData.map((envData)=> new Environment(envData["name"]))
             return project
         }))
     }
 
     async getDeployInfraContent(project, environment) {
-        const content = await this.readFileContent(this.sumupOwner, this.deployInfraRepository, `projects/${project.namespace}/${project.name}/${environment.name}/values.yaml`)
+        const content = await this.readFileContent(this.sumupOwner, this.deployInfraRepository, `projects/${project.team.getNamespace()}/${project.name}/${environment.name}/values.yaml`)
         return (new DeployInfraService()).getProjectContent(content)
     }
 

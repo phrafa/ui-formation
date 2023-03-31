@@ -9,14 +9,14 @@ export async function execute(event, args) {
         const projects = await user.loadProjects()
         
         const namespaces = projects.filter((item, index) => {
-            return projects.findIndex(obj => obj.namespace === item.namespace) === index;
+            return projects.findIndex(obj => obj.team.getNamespace() === item.team.getNamespace()) === index;
         }).map(item => {
-            return { namespace: item.namespace, teamName: item.teamName, projects: {} };
+            return { namespace: item.team.getNamespace(), teamName: item.team.getSquad(), projects: {} };
           });
 
         for (let x in namespaces) {
             namespaces[x].projects = projects.filter((item, index) => {
-               return namespaces[x].namespace === item.namespace
+               return namespaces[x].namespace === item.team.getNamespace()
             }).map(item => {
                 return { name: item.name};
             });
