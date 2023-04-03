@@ -4,7 +4,7 @@ export async function execute(event, args) {
 
     const obj = new UserService()
 
-    obj.
+    // obj.
     event.reply('createNewAppAction', {
 
     })

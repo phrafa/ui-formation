@@ -27,8 +27,10 @@ export default {
           componentActive.value = 'CreateAppForm'
           window.electron.send("listNamespaces", true);
         }
-          
+
       })
+
+
     })
 
     return {
@@ -49,7 +51,7 @@ export default {
   notifications: false,
   sound: true,
   widgets: false,
-  
+
 };
 </script>
   
